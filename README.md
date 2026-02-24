@@ -4,7 +4,6 @@ This project is meant to implement a simple AI to play the [Game of the Amazons]
 - Chad Glazier
 - Guohao Ma
 - Zhishang Ma
-- Aditya Goswami
 - Aaryan Oberoi
 
 # Running the Project
