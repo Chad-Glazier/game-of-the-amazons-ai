@@ -24,9 +24,13 @@ public class COSC322Test extends GamePlayer {
     private String userName = null;
     private String passwd = null;
     
-    // NEW: Variable to store your assigned color
+    // Variable to store your assigned color
     // 1 = White, 2 = Black
     private int myColor = -1; 
+    
+    // NEW: Internal 2D Array to represent the board for AI calculations
+    // Size 11x11 is used because the server uses 1-based indexing (1 to 10)
+    private int[][] board = new int[11][11];
  
     
     /**
@@ -111,11 +115,14 @@ public class COSC322Test extends GamePlayer {
                 @SuppressWarnings("unchecked")
                 ArrayList<Integer> state = (ArrayList<Integer>) msgDetails.get(GameMessage.GAME_STATE_BOARD);
                 gamegui.setGameState(state);
+                
+                // NEW: Populate the internal 2D board with the initial state
+                setupLocalBoard(state);
             }
             return true;
         }
 
-        // 2. NEW: Identify Role (Black vs White)
+        // 2. Identify Role (Black vs White)
         if (messageType.equals(GameMessage.GAME_ACTION_START)) {
         	String whiteUser = (String) msgDetails.get("player-white");
         	String blackUser = (String) msgDetails.get("player-black");
@@ -140,10 +147,65 @@ public class COSC322Test extends GamePlayer {
             if (gamegui != null) {
                 gamegui.updateGameState(msgDetails);
             }
+            
+            // NEW: Update the internal 2D board to reflect the move
+            @SuppressWarnings("unchecked")
+            ArrayList<Integer> queenPosCurr = (ArrayList<Integer>) msgDetails.get("queen-position-current");
+            @SuppressWarnings("unchecked")
+            ArrayList<Integer> queenPosNext = (ArrayList<Integer>) msgDetails.get("queen-position-next");
+            @SuppressWarnings("unchecked")
+            ArrayList<Integer> arrowPos = (ArrayList<Integer>) msgDetails.get("arrow-position");
+            
+            updateLocalBoard(queenPosCurr, queenPosNext, arrowPos);
+            
             return true;
         }
                 
         return true;    
+    }
+
+    
+    
+    //AI can "remember" and "update" the chessboard.
+    /**
+     * Converts the 1D ArrayList from the server into a 2D array (11x11).
+     * 0 = Empty, 1 = White Queen, 2 = Black Queen, 3 = Arrow
+     */
+    private void setupLocalBoard(ArrayList<Integer> state) {
+        int counter = 0;
+        for (int r = 0; r < 11; r++) {
+            for (int c = 0; c < 11; c++) {
+                this.board[r][c] = state.get(counter);
+                counter++;
+            }
+        }
+        System.out.println("Internal 2D board initialized.");
+    }
+    
+    /**
+     * Updates the internal 2D array when a move is made by any player.
+     */
+    private void updateLocalBoard(ArrayList<Integer> qCurr, ArrayList<Integer> qNext, ArrayList<Integer> arrow) {
+        int rCurr = qCurr.get(0);
+        int cCurr = qCurr.get(1);
+        int rNext = qNext.get(0);
+        int cNext = qNext.get(1);
+        int rArrow = arrow.get(0);
+        int cArrow = arrow.get(1);
+        
+        // Find which queen is moving (1 for White, 2 for Black)
+        int movingQueen = this.board[rCurr][cCurr];
+        
+        // 1. Remove the queen from the old position
+        this.board[rCurr][cCurr] = 0;
+        
+        // 2. Place the queen in the new position
+        this.board[rNext][cNext] = movingQueen;
+        
+        // 3. Place the arrow (represented by 3)
+        this.board[rArrow][cArrow] = 3;
+        
+        System.out.println("Internal 2D board updated with recent move.");
     }
     
     
