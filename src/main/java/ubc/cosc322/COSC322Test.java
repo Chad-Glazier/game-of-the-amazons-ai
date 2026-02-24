@@ -65,17 +65,38 @@ public class COSC322Test extends GamePlayer {
 
     @Override
     public void onLogin() {
-        System.out.println("Congratualations!!! "
-                + "I am called because the server indicated that the login is successfully");
+        System.out.println("Congratulations!!! Login successful.");
         
-     // Display the room list on the GUI
-        userName = gameClient.getUserName();
+        // 1. Synchronize usernames and GUI room list
+        this.userName = gameClient.getUserName();
         if (gamegui != null) {
-        	gamegui.setRoomInformation(gameClient.getRoomList());
+            gamegui.setRoomInformation(gameClient.getRoomList());
         }
-        
-        System.out.println("The next step is to find a room and join it: "
-                + "the gameClient instance created in my constructor knows how!"); 
+
+     // 2. Automatically find and join rooms
+     // Get the current list of rooms on the server
+        List<Room> rooms = gameClient.getRoomList();
+        String targetRoom = "Okanagan Lake"; // we can change the room name
+        boolean joined = false;
+
+        System.out.println("Searching for room: " + targetRoom);
+
+        for (Room room : rooms) {
+            if (room.getName().equals(targetRoom)) {
+                System.out.println("Found it! Joining " + targetRoom + "...");
+                gameClient.joinRoom(targetRoom); 
+                joined = true;
+                break;
+            }
+        }
+
+        if (!joined) {
+            System.out.println("Room '" + targetRoom + "' not found. Available rooms are:");
+            for (Room r : rooms) {
+                System.out.println("- " + r.getName());
+            }
+            System.out.println("Please double-click a room in the GUI to proceed.");
+        }
     }
 
     @Override
