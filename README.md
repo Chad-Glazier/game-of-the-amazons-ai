@@ -25,7 +25,8 @@ mvn exec:java "-Dexec.mainClass=ubc.cosc322.COSC322Test" "-Dexec.args=username p
 (*This section is for group members.*)
 
 The following are a list of rules for contributing to the project when making any significant changes (i.e. anything other than a minor bug fix or change to documentation):
-1) Create a new branch.
+1) Open an issue (you can do that from [here](https://github.com/Chad-Glazier/game-of-the-amazons-ai/issues)).
+1) Create a new branch for the issue (i.e. go to the issue page, and click on the "create a branch" link).
 2) Make changes to the branch.
 3) Submit a pull request to merge the branch to `main`.
-4) Wait for another group member to review the changes and merge the changes.
+4) Wait for another group member to review the changes and merge the changes. (Once the PR is merged, the issue should automatically be marked as closed.)
