@@ -23,6 +23,10 @@ public class COSC322Test extends GamePlayer {
     
     private String userName = null;
     private String passwd = null;
+    
+    // NEW: Variable to store your assigned color
+    // 1 = White, 2 = Black
+    private int myColor = -1; 
  
     
     /**
@@ -76,7 +80,7 @@ public class COSC322Test extends GamePlayer {
      // 2. Automatically find and join rooms
      // Get the current list of rooms on the server
         List<Room> rooms = gameClient.getRoomList();
-        String targetRoom = "Okanagan Lake"; // we can change the room name
+        String targetRoom = "Okanagan Lake"; 
         boolean joined = false;
 
         System.out.println("Searching for room: " + targetRoom);
@@ -101,7 +105,7 @@ public class COSC322Test extends GamePlayer {
 
     @Override
     public boolean handleGameMessage(String messageType, Map<String, Object> msgDetails) {
-        // Handling chessboard initialization state
+        // 1. Handling chessboard initialization state
         if (messageType.equals(GameMessage.GAME_STATE_BOARD)) {
             if (gamegui != null) {
                 @SuppressWarnings("unchecked")
@@ -111,7 +115,27 @@ public class COSC322Test extends GamePlayer {
             return true;
         }
 
-        // Handling piece movement
+        // 2. NEW: Identify Role (Black vs White)
+        if (messageType.equals(GameMessage.GAME_ACTION_START)) {
+        	String whiteUser = (String) msgDetails.get("player-white");
+        	String blackUser = (String) msgDetails.get("player-black");
+            
+            System.out.println("Game Starting!");
+            System.out.println("White Player: " + whiteUser);
+            System.out.println("Black Player: " + blackUser);
+
+            // Determine if I am White or Black
+            if (whiteUser.equals(this.userName)) {
+                this.myColor = 1; 
+                System.out.println("I am playing as WHITE (First move).");
+            } else if (blackUser.equals(this.userName)) {
+                this.myColor = 2;
+                System.out.println("I am playing as BLACK (Second move).");
+            }
+            return true;
+        }
+
+        // 3. Handling piece movement
         if (messageType.equals(GameMessage.GAME_ACTION_MOVE)) {
             if (gamegui != null) {
                 gamegui.updateGameState(msgDetails);
