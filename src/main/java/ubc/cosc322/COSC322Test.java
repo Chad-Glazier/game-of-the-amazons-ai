@@ -29,8 +29,9 @@ public class COSC322Test extends GamePlayer {
     private int myColor = -1; 
     
     // NEW: Internal 2D Array to represent the board for AI calculations
-    // Size 11x11 is used because the server uses 1-based indexing (1 to 10)
-    private int[][] board = new int[11][11];
+    // Size 10x10 is used as requested by team to simplify evaluation indices.
+    // NOTE: All incoming server coordinates (1-10) must be shifted by -1.
+    private int[][] board = new int[10][10];
  
     
     /**
@@ -168,30 +169,37 @@ public class COSC322Test extends GamePlayer {
     
     //AI can "remember" and "update" the chessboard.
     /**
-     * Converts the 1D ArrayList from the server into a 2D array (11x11).
+     * Converts the 1D ArrayList from the server into a 10x10 2D array.
+     * Skips the 0th row and 0th column padding sent by the server.
      * 0 = Empty, 1 = White Queen, 2 = Black Queen, 3 = Arrow
      */
     private void setupLocalBoard(ArrayList<Integer> state) {
-        int counter = 0;
-        for (int r = 0; r < 11; r++) {
-            for (int c = 0; c < 11; c++) {
-                this.board[r][c] = state.get(counter);
-                counter++;
+        // The server sends 121 elements (11x11). We only want rows 1-10 and cols 1-10.
+        // We map server index (r, c) to local board index [r-1][c-1]
+        for (int r = 1; r <= 10; r++) {
+            for (int c = 1; c <= 10; c++) {
+                // Server index formula: r * 11 + c
+                int serverIndex = r * 11 + c;
+                this.board[r - 1][c - 1] = state.get(serverIndex);
             }
         }
-        System.out.println("Internal 2D board initialized.");
+        System.out.println("Internal 10x10 board initialized.");
     }
     
     /**
-     * Updates the internal 2D array when a move is made by any player.
+     * Updates the internal 10x10 array when a move is made by any player.
+     * Applies a -1 offset to convert server coordinates (1-10) to local array indices (0-9).
      */
     private void updateLocalBoard(ArrayList<Integer> qCurr, ArrayList<Integer> qNext, ArrayList<Integer> arrow) {
-        int rCurr = qCurr.get(0);
-        int cCurr = qCurr.get(1);
-        int rNext = qNext.get(0);
-        int cNext = qNext.get(1);
-        int rArrow = arrow.get(0);
-        int cArrow = arrow.get(1);
+        // Apply -1 to shift from 1-based index to 0-based index
+        int rCurr = qCurr.get(0) - 1;
+        int cCurr = qCurr.get(1) - 1;
+        
+        int rNext = qNext.get(0) - 1;
+        int cNext = qNext.get(1) - 1;
+        
+        int rArrow = arrow.get(0) - 1;
+        int cArrow = arrow.get(1) - 1;
         
         // Find which queen is moving (1 for White, 2 for Black)
         int movingQueen = this.board[rCurr][cCurr];
@@ -205,7 +213,7 @@ public class COSC322Test extends GamePlayer {
         // 3. Place the arrow (represented by 3)
         this.board[rArrow][cArrow] = 3;
         
-        System.out.println("Internal 2D board updated with recent move.");
+        System.out.println("Internal 10x10 board updated with recent move.");
     }
     
     
