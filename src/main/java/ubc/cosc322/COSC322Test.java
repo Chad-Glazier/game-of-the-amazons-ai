@@ -110,15 +110,20 @@ public class COSC322Test extends GamePlayer {
 
     @Override
     public boolean handleGameMessage(String messageType, Map<String, Object> msgDetails) {
-        // 1. Handling chessboard initialization state
+    	// 1. Handling chessboard initialization state
         if (messageType.equals(GameMessage.GAME_STATE_BOARD)) {
             if (gamegui != null) {
                 @SuppressWarnings("unchecked")
-                ArrayList<Integer> state = (ArrayList<Integer>) msgDetails.get(GameMessage.GAME_STATE_BOARD);
-                gamegui.setGameState(state);
+                // Use "game-state" as the extraction key.
+                ArrayList<Integer> state = (ArrayList<Integer>) msgDetails.get("game-state"); 
                 
-                // NEW: Populate the internal 2D board with the initial state
-                setupLocalBoard(state);
+                // Add security checks to prevent future server fluctuations from causing crashes again.
+                if (state != null) {
+                    gamegui.setGameState(state);
+                    setupLocalBoard(state); // no more NullPointerException 
+                } else {
+                    System.err.println("ERROR: Received GAME_STATE_BOARD but 'game-state' data is null!");
+                }
             }
             return true;
         }
