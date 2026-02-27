@@ -145,6 +145,7 @@ public class COSC322Test extends GamePlayer {
                 this.myColor = 2;
                 System.out.println("I am playing as BLACK (Second move).");
             }
+            
             return true;
         }
 
@@ -169,10 +170,12 @@ public class COSC322Test extends GamePlayer {
                 
         return true;    
     }
-
     
     
-    //AI can "remember" and "update" the chessboard.
+    // =========================================================
+    // BOARD MANAGEMENT METHODS
+    // =========================================================
+    
     /**
      * Converts the 1D ArrayList from the server into a 10x10 2D array.
      * Skips the 0th row and 0th column padding sent by the server.
@@ -222,6 +225,119 @@ public class COSC322Test extends GamePlayer {
     }
     
     
+    // =========================================================
+    // MODULE 1: LEGAL MOVE GENERATOR
+    // =========================================================
+
+    /**
+     * Custom class to store a complete Amazon move (0-indexed).
+     * Includes helper methods to convert back to 1-indexed server format.
+     */
+    public class AmazonMove {
+        int[] qStart;
+        int[] qEnd;
+        int[] arrow;
+
+        public AmazonMove(int[] start, int[] end, int[] arr) {
+            this.qStart = start;
+            this.qEnd = end;
+            this.arrow = arr;
+        }
+
+        // Method to convert coordinates back to 1-10 format for server sending
+        public ArrayList<Integer> getServerQStart() { return toServerList(qStart); }
+        public ArrayList<Integer> getServerQEnd()   { return toServerList(qEnd); }
+        public ArrayList<Integer> getServerArrow()  { return toServerList(arrow); }
+
+        private ArrayList<Integer> toServerList(int[] coord) {
+            ArrayList<Integer> list = new ArrayList<>();
+            list.add(coord[0] + 1); // Apply +1 offset for server
+            list.add(coord[1] + 1);
+            return list;
+        }
+    }
+
+    /**
+     * Finds all legal moves for a given color on a given board.
+     * @param color The player's color (1 for White, 2 for Black)
+     * @param currentBoard The 10x10 board to evaluate
+     * @return A list of all possible valid moves.
+     */
+    public ArrayList<AmazonMove> generateLegalMoves(int color, int[][] currentBoard) {
+        ArrayList<AmazonMove> legalMoves = new ArrayList<>();
+        ArrayList<int[]> myQueens = new ArrayList<>();
+
+        // 1. Find all queens belonging to 'color'
+        for (int r = 0; r < 10; r++) {
+            for (int c = 0; c < 10; c++) {
+                if (currentBoard[r][c] == color) {
+                    myQueens.add(new int[]{r, c});
+                }
+            }
+        }
+
+        // 2. For each queen, calculate legal moves
+        for (int[] queenStart : myQueens) {
+            int startR = queenStart[0];
+            int startC = queenStart[1];
+
+            // Get all squares this queen can move to
+            ArrayList<int[]> possibleQueenEnds = getAvailableSquares(startR, startC, currentBoard);
+
+            for (int[] queenEnd : possibleQueenEnds) {
+                int endR = queenEnd[0];
+                int endC = queenEnd[1];
+
+                // --- CRITICAL STEP: Simulate the queen moving ---
+                // Temporarily update the board so the arrow can be calculated correctly
+                // The arrow can be shot to or through the square the queen just left!
+                currentBoard[startR][startC] = 0; 
+                currentBoard[endR][endC] = color; 
+
+                // Get all squares the arrow can land on from the new queen position
+                ArrayList<int[]> possibleArrowEnds = getAvailableSquares(endR, endC, currentBoard);
+
+                // Revert the simulated queen move
+                currentBoard[startR][startC] = color;
+                currentBoard[endR][endC] = 0;
+                // ------------------------------------------------
+
+                // Create full moves for each arrow possibility
+                for (int[] arrowEnd : possibleArrowEnds) {
+                    legalMoves.add(new AmazonMove(queenStart, queenEnd, arrowEnd));
+                }
+            }
+        }
+        return legalMoves;
+    }
+
+    /**
+     * Helper Method: Raycasts in 8 directions to find all reachable empty squares.
+     * Used for both Queen movement and Arrow shooting.
+     */
+    private ArrayList<int[]> getAvailableSquares(int startR, int startC, int[][] tempBoard) {
+        ArrayList<int[]> squares = new ArrayList<>();
+        // 8 directions: Up, Down, Left, Right, Up-Left, Up-Right, Down-Left, Down-Right
+        int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
+
+        for (int[] d : directions) {
+            int r = startR + d[0];
+            int c = startC + d[1];
+            // Keep going until we hit a wall or a non-empty square (val != 0)
+            while (r >= 0 && r < 10 && c >= 0 && c < 10 && tempBoard[r][c] == 0) {
+                squares.add(new int[]{r, c});
+                r += d[0]; // move further in the same direction
+                c += d[1];
+            }
+        }
+        return squares;
+    }
+
+
+    // =========================================================
+    // SFS2X REQUIRED METHODS
+    // =========================================================
+
     @Override
     public String userName() {
         return userName;
