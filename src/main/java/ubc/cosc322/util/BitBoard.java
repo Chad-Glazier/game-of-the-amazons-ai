@@ -37,7 +37,49 @@ public class BitBoard {
 	 * bitboard).
 	 */
 	public static void flag(long[] bitboard, int index) {
+		// `x & 63` is the same as `x % 64` under these conditions (namely,
+		// because 64 is a power of 2), except it only takes one CPU cycle.
 		bitboard[index >>> 6] |= (1L << (index & 63));
+	}
+
+	/**
+	 * Un-flags the specified index (i.e., sets it to <code>0</code> in the
+	 * bitboard).
+	 */
+	public static void unflag(long[] bitboard, int index) {
+		bitboard[index >>> 6] &= ~(1L << (index & 63));
+	}
+
+	/**
+	 * Moves a flag from one position to another. Unlike the other bitboard
+	 * operations defined on this utility class, this function creates and
+	 * returns a copy, leaving the original bitboard unchanged.
+	 * 
+	 * To help performance, this function assumes that the original bitboard
+	 * is representing a normal 10x10 board.
+	 * 
+	 * @param bitboard The original bitboard. This will be unchanged.
+	 * @param src The position index to remove the bit from.
+	 * @param dst The position index to move the bit to.
+	 * @returns A copy of the original bitboard with the move applied.
+	 */
+	public static long[] move(long[] bitboard, int src, int dst) {
+		long hi = bitboard[0];
+		long lo = bitboard[1];
+
+		if (src < 64) {
+			lo ^= (1L << src);
+		} else {
+			hi ^= (1L << (src - 64));
+		}
+
+		if (dst < 64) {
+			lo ^= (1L << dst);
+		} else {
+			hi ^= (1L << (dst - 64));
+		}
+
+		return new long[]{ hi, lo };
 	}
 
 	/**

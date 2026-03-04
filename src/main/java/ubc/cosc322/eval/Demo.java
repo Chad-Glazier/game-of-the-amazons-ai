@@ -1,6 +1,6 @@
 package ubc.cosc322.eval;
 
-public class Test {
+public class Demo {
 	public static void main() {
 		RandomBoard board = new RandomBoard(0.30);
 

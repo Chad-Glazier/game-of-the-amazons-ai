@@ -42,7 +42,7 @@ import ubc.cosc322.eval.MinDist; // at the time of writing, this is the only
 	double blackScore = heuristic.evaluate(false);
 ```
 
-Note that the board state is an `int[100]`, not an `int[10][10]`. To convert an `int[10][10]` to `int[100]`, you can use the helper function `Util.convertBoard`, which can be imported from `ubc.cosc322.eval.Util`.
+Note that the board state is an `int[100]`, not an `int[10][10]`. To convert an `int[10][10]` to `int[100]`, you can use the helper function `Util.flatten`, which can be imported from `ubc.cosc322.eval.Util`.
 
 If you want to evaluate multiple board states, just call `.setBoard` with the new board state, then run the `.evaluate` method again. 
 
@@ -50,7 +50,7 @@ To run a test of the heuristic evaluation function run:
 
 ```sh
 mvn compile
-mvn exec:java "-Dexec.mainClass=ubc.cosc322.eval.Test"
+mvn exec:java "-Dexec.mainClass=ubc.cosc322.eval.Demo"
 ```
 
 # Contributing Guidelines

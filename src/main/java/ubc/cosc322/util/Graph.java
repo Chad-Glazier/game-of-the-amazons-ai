@@ -30,9 +30,13 @@ public class Graph {
 	 * @return A list of all vertices adjacent to <code>vertex</code>
 	 */
 	public static LinkedList<Integer> neighbors(long[] empty, int vertex) {
-		//
-		//TODO: figure out a more performant propagation method.
-		//
+
+		// TODO: figure out a more performant propagation method, or use the
+		// bitboard method
+
+		// TODO: It's possible to implement this with bitboard operations:
+		// https://tomcant.dev/posts/2023/05/building-a-chess-ai-part-2-move-generation/
+		// This would be much faster, though more memory-intensive.
 
 		final int[] origin = { vertex / M, vertex % M };
 
