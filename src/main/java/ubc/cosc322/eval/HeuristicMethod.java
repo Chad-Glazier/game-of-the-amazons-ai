@@ -1,9 +1,16 @@
 package ubc.cosc322.eval;
 
-interface HeuristicMethod {
+public interface HeuristicMethod {
 	/**
 	 * Sets the board, preparing it for evaluation. Make sure to run this
 	 * before {@code evaluate}.
+	 * 
+	 * The board should contain an <code>int</code> for each square, and its
+	 * value should represent one of the following states:
+	 * - <code>0</code> for empty spaces,
+	 * - <code>1</code> for a white queen,
+	 * - <code>2</code> for a black queen, or
+	 * - <code>3</code> for a space removed by an arrow.
 	 * 
 	 * @param board A representation of the boardstate. Row <code>i</code> and
 	 * column <code>j</code> should correspond to 
