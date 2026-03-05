@@ -89,7 +89,7 @@ public class MinDist implements HeuristicMethod {
 		int blackSquares = 0;
 		int whiteSquares = 0;
 		int availableSquares = 100;
-		for (int i = 0; i < SIZE; i++) {
+		for (byte i = 0; i < SIZE; i++) {
 			if (!BitBoard.flagged(empty, i)) {
 				availableSquares--;
 				continue;
@@ -144,7 +144,7 @@ public class MinDist implements HeuristicMethod {
 		int whiteSquares = 0;
 		int availableSquares = SIZE;
 		int contestedSquares = 0;
-		for (int i = 0; i < SIZE; i++) {
+		for (byte i = 0; i < SIZE; i++) {
 			if (!BitBoard.flagged(empty, i)) {
 				availableSquares--;
 				boardDisplay[i] = arrowMark;

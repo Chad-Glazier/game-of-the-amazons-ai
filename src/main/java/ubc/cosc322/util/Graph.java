@@ -70,7 +70,7 @@ public class Graph {
 			while (
 				row < N && row >= 0 &&
 				col < M && col >= 0 &&
-				BitBoard.flagged(empty, row * M + col)
+				BitBoard.flagged(empty, (byte) (row * M + col))
 			) {
 				neighbors.add((byte) (row * M + col));
 

@@ -59,13 +59,6 @@ Note that the board state is an `int[100]`, not an `int[10][10]`. To convert an 
 
 If you want to evaluate multiple board states, just call `.setBoard` with the new board state, then run the `.evaluate` method again. 
 
-To run a test of the heuristic evaluation function run:
-
-```sh
-mvn compile
-mvn exec:java "-Dexec.mainClass=ubc.cosc322.eval.Demo"
-```
-
 ## Unit Tests
 
 We are using the [JUnit](https://junit.org/) testing framework.

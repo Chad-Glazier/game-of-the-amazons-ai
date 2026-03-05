@@ -53,21 +53,6 @@ public class Move {
 	}
 
 	/**
-	 * Encodes a move as an integer.
-	 * 
-	 * @param start The starting position index (0-99) of the queen to move.
-	 * @param end The position index the queen will move to.
-	 * @param arrow The position index where the queen will fire her arrow
-	 * after moving.
-	 * @return An integer representation of the move.
-	 */
-	public static int encode(int start, int end, int arrow) {
-		return (start & START_MASK) |
-			(end << END_OFFSET & END_MASK) |
-			(arrow << ARROW_OFFSET & ARROW_MASK);
-	}
-
-	/**
 	 * Reads the starting position (of the queen) from a move.
 	 * 
 	 * @param move The integer representation of a move. See {@link #encode}
@@ -107,21 +92,40 @@ public class Move {
 	 * this class for ways to use such moves.
 	 */
 	public static IntArrayList getAll(long[] empty, byte queen) {
-		return new IntArrayList();
+		IntArrayList moves = new IntArrayList();
+
+		for (byte end : Graph.neighbors(empty, queen)) {
+			for (byte arrow : Graph.neighbors(empty, end)) {
+				moves.add(encode(queen, end, arrow));
+			}
+		}
+
+		return moves;
 	}
 
 	/**
-	 * Given a board state, this function returns a collection of all possible
+	 * Given a board state and the positions of all queens that could move 
+	 * next, this function returns a collection that includes all possible
 	 * moves.
 	 *
 	 * @param empty A bitboard where each empty square is flagged.
-	 * @param queens The position indices of each queen that could be moved.
-	 * E.g., if you want to know all possible moves that White could make, you
-	 * should set this argument to the list of white queens.
-	 * @return A list of possible moves, each one represented as an integer.
-	 * The other methods of this class can be used with such move values.
+	 * @param queens The position indices of each queen that could be moved 
+	 * next. E.g., if you want to know all possible moves that White could 
+	 * make, you should set this argument to the list of white queen positions.
+	 * @return A list of integers representing moves. See the other methods of
+	 * this class for ways to use such moves.
 	 */
 	public static IntArrayList getAll(long[] empty, byte[] queens) {
-		return new IntArrayList();
+		IntArrayList moves = new IntArrayList();
+
+		for (byte queen : queens) {
+			for (byte end : Graph.neighbors(empty, queen)) {
+				for (byte arrow : Graph.neighbors(empty, end)) {
+					moves.add(encode(queen, end, arrow));
+				}
+			}			
+		}
+
+		return moves;
 	}
 }

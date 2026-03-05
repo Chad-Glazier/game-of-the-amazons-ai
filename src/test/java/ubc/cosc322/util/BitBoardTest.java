@@ -8,11 +8,13 @@ public class BitBoardTest {
 	void testFlagUnflag() {
 		long[] bb = BitBoard.create();
 
-		BitBoard.flag(bb, 0);
-		assertTrue(BitBoard.flagged(bb, 0));
+		byte pos = 0;
 
-		BitBoard.unflag(bb, 0);
-		assertFalse(BitBoard.flagged(bb, 0));
+		BitBoard.flag(bb, pos);
+		assertTrue(BitBoard.flagged(bb, pos));
+
+		BitBoard.unflag(bb, pos);
+		assertFalse(BitBoard.flagged(bb, pos));
 
 		assertEquals(bb[0], 0L);
 		assertEquals(bb[1], 0L);
@@ -22,11 +24,14 @@ public class BitBoardTest {
 	void testMove() {
 		long[] bb = BitBoard.create();
 
-		BitBoard.flag(bb, 0);
-		long[] moved = BitBoard.move(bb, 0, 23);
+		byte src = 0;
+		byte dst = 23;
 
-		assertFalse(BitBoard.flagged(moved, 0));
-		assertTrue(BitBoard.flagged(moved, 23));
+		BitBoard.flag(bb, src);
+		long[] moved = BitBoard.move(bb, src, dst);
+
+		assertFalse(BitBoard.flagged(moved, src));
+		assertTrue(BitBoard.flagged(moved, dst));
 
 		assertNotEquals(bb, moved);
 	}

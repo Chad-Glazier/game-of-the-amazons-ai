@@ -36,7 +36,7 @@ public class BitBoard {
 	 * Flags the specified index (i.e., sets it to <code>1</code> in the
 	 * bitboard).
 	 */
-	public static void flag(long[] bitboard, int index) {
+	public static void flag(long[] bitboard, byte index) {
 		// `x & 63` is the same as `x % 64` under these conditions (namely,
 		// because 64 is a power of 2), except it only takes one CPU cycle.
 		bitboard[index >>> 6] |= (1L << (index & 63));
@@ -46,7 +46,7 @@ public class BitBoard {
 	 * Un-flags the specified index (i.e., sets it to <code>0</code> in the
 	 * bitboard).
 	 */
-	public static void unflag(long[] bitboard, int index) {
+	public static void unflag(long[] bitboard, byte index) {
 		bitboard[index >>> 6] &= ~(1L << (index & 63));
 	}
 
@@ -63,7 +63,7 @@ public class BitBoard {
 	 * @param dst The position index to move the bit to.
 	 * @returns A copy of the original bitboard with the move applied.
 	 */
-	public static long[] move(long[] bitboard, int src, int dst) {
+	public static long[] move(long[] bitboard, byte src, byte dst) {
 		long lo = bitboard[0];
 		long hi = bitboard[1];
 
@@ -86,7 +86,7 @@ public class BitBoard {
 	 * Returns <code>true</code> if and only if the indexed bit is flagged
 	 * (i.e., if it is <code>1</code> in the bitboard).
 	 */
-	public static boolean flagged(long[] bitboard, int index) {
+	public static boolean flagged(long[] bitboard, byte index) {
 		return (bitboard[index >>> 6] & (1L << (index & 63))) != 0;
 	}
 
