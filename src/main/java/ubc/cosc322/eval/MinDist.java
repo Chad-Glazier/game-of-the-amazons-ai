@@ -24,11 +24,11 @@ public class MinDist implements HeuristicMethod {
 	/**
 	 * Stores the indices of each white queen.
 	 */
-	private final int[] white = new int[QUEENS];
+	private final byte[] white = new byte[QUEENS];
 	/**
 	 * Stores the indices of each black queen.
 	 */
-	private final int[] black = new int[QUEENS];
+	private final byte[] black = new byte[QUEENS];
 
 	public MinDist() {}
 
@@ -38,7 +38,7 @@ public class MinDist implements HeuristicMethod {
 		int whiteQueensMarked = 0;
 		int blackQueensMarked = 0;
 
-		for (int i = 0; i < SIZE; i++) {
+		for (byte i = 0; i < SIZE; i++) {
 			switch (board[i]) {
 			case EMPTY:
 				BitBoard.flag(empty, i);
@@ -55,7 +55,7 @@ public class MinDist implements HeuristicMethod {
 		}
 	}
 
-	public void setBoard(long[] empty, int[] white, int[] black) {
+	public void setBoard(long[] empty, byte[] white, byte[] black) {
 		for (int i = 0; i < SIZE / 64 + 1; i++) {
 			this.empty[i] = empty[i];
 		}

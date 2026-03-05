@@ -23,10 +23,10 @@ public interface HeuristicMethod {
 	 * it for evaluation. Make sure to run this before {@code evaluate}.
 	 * 
 	 * @param empty A bitboard where each empty square is flagged.
-	 * @param black The position indices of each black queen.
-	 * @param white The position indices of each white queen.
+	 * @param black The position indices (0-99) of each black queen.
+	 * @param white The position indices (0-99) of each white queen.
 	 */
-	void setBoard(long[] empty, int[] white, int[] black);
+	void setBoard(long[] empty, byte[] white, byte[] black);
 
 	/**
 	 * Evaluates the board state. Make sure that you run {@code setBoard}

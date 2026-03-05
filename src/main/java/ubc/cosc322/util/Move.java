@@ -98,6 +98,19 @@ public class Move {
 	}
 
 	/**
+	 * Given a board state, this function returns all possible moves that
+	 * could be made by a queen at the specified position.
+	 * 
+	 * @param empty A bitboard where each empty square is flagged.
+	 * @param queen The position index of the queen to generate moves for.
+	 * @return A list of integers representing moves. See the other methods of
+	 * this class for ways to use such moves.
+	 */
+	public static IntArrayList getAll(long[] empty, byte queen) {
+		return new IntArrayList();
+	}
+
+	/**
 	 * Given a board state, this function returns a collection of all possible
 	 * moves.
 	 *
@@ -108,11 +121,7 @@ public class Move {
 	 * @return A list of possible moves, each one represented as an integer.
 	 * The other methods of this class can be used with such move values.
 	 */
-	public static IntArrayList getAll(long[] empty, int[] queens) {
+	public static IntArrayList getAll(long[] empty, byte[] queens) {
 		return new IntArrayList();
 	}
-
-	/**
-	 * 
-	 */
 }

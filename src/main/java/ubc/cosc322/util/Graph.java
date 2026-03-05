@@ -2,7 +2,7 @@ package ubc.cosc322.util;
 
 import java.util.LinkedList;
 
-import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.bytes.ByteArrayList;
 
 /**
  * This class contains a number of static methods meant for analyzing a given
@@ -31,7 +31,7 @@ public class Graph {
 	 * neighbors.
 	 * @return A list of all vertices adjacent to <code>vertex</code>
 	 */
-	public static IntArrayList neighbors(long[] empty, int vertex) {
+	public static ByteArrayList neighbors(long[] empty, byte vertex) {
 
 		// TODO: figure out a more performant propagation method, or use the
 		// bitboard method
@@ -56,7 +56,7 @@ public class Graph {
 			{  1,  1 }
 		};
 
-		final IntArrayList neighbors = new IntArrayList();
+		final ByteArrayList neighbors = new ByteArrayList();
 
 		for (int[] delta : directions) {
 			int row = origin[0];
@@ -72,7 +72,7 @@ public class Graph {
 				col < M && col >= 0 &&
 				BitBoard.flagged(empty, row * M + col)
 			) {
-				neighbors.add(row * M + col);
+				neighbors.add((byte) (row * M + col));
 
 				row += rowDelta;
 				col += colDelta;
@@ -101,7 +101,7 @@ public class Graph {
 	 * distance of <code>x</code> between the <code>origin</code> and another
 	 * vertex <code>p</code>, then <code>d[p] == x</code>.
 	 */
-	public static byte[] distance(long[] empty, int origin) {
+	public static byte[] distance(long[] empty, byte origin) {
 		
 		// This function is implemented with a slightly modified breadth-
 		// first search.
@@ -112,15 +112,15 @@ public class Graph {
 			distance[i] = 100;
 		}
 
-		final LinkedList<Integer> queue = new LinkedList<Integer>(); 
+		final LinkedList<Byte> queue = new LinkedList<Byte>(); 
 		queue.push(origin);
 		BitBoard.flag(visited, origin);
 		distance[origin] = 0;
 
 		while(!queue.isEmpty()) {
-			int current = queue.pop();
+			byte current = queue.pop();
 			
-			for (int neighbor : neighbors(empty, current)) {
+			for (byte neighbor : neighbors(empty, current)) {
 				if (BitBoard.flagged(visited, neighbor)) {
 
 					// Since this is a graph, not a tree, it's possible that 
