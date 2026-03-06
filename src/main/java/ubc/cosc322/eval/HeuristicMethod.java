@@ -32,12 +32,12 @@ public interface HeuristicMethod {
 	 * Evaluates the board state. Make sure that you run {@code setBoard}
 	 * before this function.
 	 * 
-	 * @param playerIsWhite a flag indicating whether to return the score for
-	 * white (otherwise it returns the score for black).
-	 * @return a number from 0 to 1, representing the favorability score based
+	 * @param player The player to evaluate the boardstate for. <code>0</code> 
+	 * for White, and <code>1</code> for Black.
+	 * @return A number from 0 to 1, representing the favorability score based
 	 * of the board state.
 	 */
-	double evaluate(boolean playerIsWhite);
+	double evaluate(byte player);
 
 	/**
 	 * Displays some kind of visualization of the heuristic analysis. The kind

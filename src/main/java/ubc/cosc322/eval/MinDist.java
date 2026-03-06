@@ -17,6 +17,8 @@ public class MinDist implements HeuristicMethod {
 	private static final int WHITE_QUEEN = 1;
 	private static final int BLACK_QUEEN = 2;
 
+	private static final int WHITE = 0;
+
 	/**
 	 * Bitboard where empty squares should be flagged.
 	 */
@@ -56,9 +58,7 @@ public class MinDist implements HeuristicMethod {
 	}
 
 	public void setBoard(long[] empty, byte[] white, byte[] black) {
-		for (int i = 0; i < SIZE / 64 + 1; i++) {
-			this.empty[i] = empty[i];
-		}
+		BitBoard.copyTo(empty, this.empty);
 
 		for (int i = 0; i < QUEENS; i++) {
 			this.white[i] = white[i];
@@ -66,7 +66,7 @@ public class MinDist implements HeuristicMethod {
 		}
 	}
 
-	public double evaluate(boolean playerIsWhite) {
+	public double evaluate(byte player) {
 		byte[] blackMinDistBoard = Graph.distance(empty, black[0]);
 		byte[] whiteMinDistBoard = Graph.distance(empty, white[0]);
 
@@ -104,7 +104,7 @@ public class MinDist implements HeuristicMethod {
 			}
 		}
 
-		if (playerIsWhite) {
+		if (player == WHITE) {
 			return ((double) (whiteSquares - blackSquares)) / ((double) 2 * availableSquares) + 0.50;
 		} else {
 			return ((double) (blackSquares - whiteSquares)) / ((double) 2 * availableSquares) + 0.50;

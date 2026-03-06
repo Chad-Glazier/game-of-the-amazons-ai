@@ -1,6 +1,7 @@
 package ubc.cosc322.util;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
+import ubc.cosc322.eval.HeuristicMethod;
 
 /**
  * This class is used to handle moves on the board. Use this class to:<br />
@@ -26,16 +27,23 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
  * queen.<br />
  * - The next 8 bits are the queen's destination.<br />
  * - The next 8 bits are the target for the queen's arrow.<br />
- * - The remaining (most significant) 8 bits are left empty.<br />
+ * - The remaining (most significant) 8 bits indicate which player made the
+ * move. This could be deduced from other board state information (i.e.,
+ * checking which queen position array the starting position belongs to),
+ * but we're not using these bits for anything else.<br />
  */
 public class Move {
 	// private static final int START_OFFSET = 0;
 	private static final int END_OFFSET = 8;
 	private static final int ARROW_OFFSET = 16;
+	private static final int PLAYER_OFFSET = 24;
 
 	private static final int START_MASK = 0x000000ff;
 	private static final int END_MASK = 0x0000ff00;
 	private static final int ARROW_MASK = 0x00ff0000;
+	private static final int PLAYER_MASK = 0xff000000;
+
+	private static final int WHITE = 0;
 
 	private static final int QUEENS = 4;
 
@@ -46,12 +54,15 @@ public class Move {
 	 * @param end The position index the queen will move to.
 	 * @param arrow The position index where the queen will fire her arrow
 	 * after moving.
+	 * @param player The player making the move (<code>0</code> for White, and
+	 * <code>1</code> for Black).
 	 * @return An integer representation of the move.
 	 */
-	public static int encode(byte start, byte end, byte arrow) {
+	public static int encode(byte start, byte end, byte arrow, byte player) {
 		return (int) start | 
 			(int) end << END_OFFSET |
-			(int) arrow << ARROW_OFFSET;
+			(int) arrow << ARROW_OFFSET |
+			(int) player << PLAYER_OFFSET;
 	}
 
 	/**
@@ -85,21 +96,33 @@ public class Move {
 	}
 
 	/**
+	 * Reads the active player from a move.
+	 * 
+	 * @param move The integer representation of a move. See {@link #encode}
+	 * @return <code>0</code> for White, and <code>1</code> for Black.
+	 */
+	public static byte player(int move) {
+		return (byte) ((move & PLAYER_MASK) >>> PLAYER_OFFSET);
+	}
+
+	/**
 	 * Given a board state, this function returns all possible moves that
 	 * could be made by a queen at the specified position.
 	 * 
 	 * @param empty A bitboard where each empty square is flagged.
 	 * @param queen The position index of the queen to generate moves for.
+	 * @param player The player moving the queen. <code>0</code> for White, and
+	 * <code>1</code> for Black.
 	 * @return A list of integers representing moves. See the other methods of
 	 * this class for ways to use such moves.
 	 */
-	public static IntArrayList getAll(long[] empty, byte queen) {
+	public static IntArrayList getAll(long[] empty, byte queen, byte player) {
 		IntArrayList moves = new IntArrayList();
 
 		for (byte end : Graph.neighbors(empty, queen)) {
 			long[] newEmpty = BitBoard.flagCopy(empty, queen);
 			for (byte arrow : Graph.neighbors(newEmpty, end)) {
-				moves.add(encode(queen, end, arrow));
+				moves.add(encode(queen, end, arrow, player));
 			}
 		}
 
@@ -115,17 +138,21 @@ public class Move {
 	 * @param queens The position indices of each queen that could be moved 
 	 * next. E.g., if you want to know all possible moves that White could 
 	 * make, you should set this argument to the list of white queen positions.
+	 * @param player The player making the move (<code>0</code> for White, and
+	 * <code>1</code> for Black).
 	 * @return A list of integers representing moves. See the other methods of
 	 * this class for ways to use such moves.
 	 */
-	public static IntArrayList getAll(long[] empty, byte[] queens) {
+	public static IntArrayList getAll(
+		long[] empty, byte[] queens, byte player
+	) {
 		IntArrayList moves = new IntArrayList();
 
 		for (byte queen : queens) {
 			for (byte end : Graph.neighbors(empty, queen)) {
 				long[] newEmpty = BitBoard.flagCopy(empty, queen);
 				for (byte arrow : Graph.neighbors(newEmpty, end)) {
-					moves.add(encode(queen, end, arrow));
+					moves.add(encode(queen, end, arrow, player));
 				}
 			}			
 		}
@@ -151,20 +178,26 @@ public class Move {
 		final byte start = start(move);
 		final byte end = end(move);
 		final byte arrow = arrow(move);
+		final byte player = player(move);
 
 		BitBoard.flag(empty, start);	// the original position is now empty
 		BitBoard.unflag(empty, end); 	// the new position is not empty
 		BitBoard.unflag(empty, arrow);  // the arrow's position is not empty
 
 		// update the position of the queen
-		for (int i = 0; i < QUEENS; i++) {
-			if (white[i] == start) {
-				white[i] = end;
-				return;
+		if (player == WHITE) {
+			for (int i = 0; i < QUEENS; i++) {
+				if (white[i] == start) {
+					white[i] = end;
+					return;
+				}
 			}
-			if (black[i] == start) {
-				black[i] = end;
-				return;
+		} else {
+			for (int i = 0; i < QUEENS; i++) {
+				if (black[i] == start) {
+					black[i] = end;
+					return;
+				}
 			}
 		}
 	}
@@ -193,6 +226,7 @@ public class Move {
 		final byte start = start(move);
 		final byte end = end(move);
 		final byte arrow = arrow(move);
+		final byte player = player(move);
 
 		BitBoard.copyTo(empty, newEmpty);
 
@@ -201,15 +235,59 @@ public class Move {
 		BitBoard.unflag(newEmpty, arrow); // the arrow's position is not empty
 
 		// update the position of the queen
-		for (int i = 0; i < QUEENS; i++) {
-			if (white[i] == start) {
-				newWhite[i] = end;
-				return;
+		if (player == WHITE) {
+			for (int i = 0; i < QUEENS; i++) {
+				if (white[i] == start) {
+					newWhite[i] = end;
+					return;
+				}
 			}
-			if (black[i] == start) {
-				newBlack[i] = end;
-				return;
+		} else {
+			for (int i = 0; i < QUEENS; i++) {
+				if (black[i] == start) {
+					newBlack[i] = end;
+					return;
+				}
 			}
 		}
+	}
+
+	/**
+	 * Given a board state, a sequence of moves, and a heuristic evaluation
+	 * function, this method evaluates the board state that would result from
+	 * applying that sequence of moves.
+	 * 
+	 * @param empty A bitboard where each empty square is flagged. This will be
+	 * not be mutated.
+	 * @param white The position indices of each white queen. This will not be
+	 * mutated.
+	 * @param black The position indices of each black queen. This will not be
+	 * mutated.
+	 * @param moves The sequence of moves to be applied before evaluating the
+	 * new board state. Moves are applied in the order of low to high indices 
+	 * (left-to-right).
+	 * @param heuristic The heuristic method used to evaluate the new board
+	 * state.
+	 * @param player The player whose position we are evaluating; 
+	 * <code>0</code> for White, and <code>1</code> for Black.
+	 */
+	public static double evaluateSequence(
+		long[] empty, byte[] white, byte[] black,
+		IntArrayList moves,
+		HeuristicMethod heuristic,
+		byte player
+	) {
+		// make copies so that we can do in-place operations without mutating
+		// the original board state.
+		empty = BitBoard.copy(empty);
+		white = new byte[]{ white[0], white[1], white[2], white[3] };
+		black = new byte[]{ black[0], black[1], black[2], black[3] };
+
+		for (int move : moves) {
+			apply(empty, white, black, move);
+		}
+
+		heuristic.setBoard(empty, white, black);
+		return heuristic.evaluate(player);
 	}
 }
