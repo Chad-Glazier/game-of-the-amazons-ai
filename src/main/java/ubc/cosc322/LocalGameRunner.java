@@ -1,20 +1,19 @@
 package ubc.cosc322;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
-// Import teammate's evaluation module
 import ubc.cosc322.eval.MinDist;
 import ubc.cosc322.eval.Util;
+import ubc.cosc322.search.AlphaBeta;
+import ubc.cosc322.util.Move;
 
 /**
- * Local Offline Test Runner
+ * Local Offline Runner
  * Allows testing of AI logic and legal move generation without connecting to the server.
  * Provides three different testing modes.
  */
 public class LocalGameRunner {
 
-    // Use the refactored board model
     private BoardState boardState;
 
     public LocalGameRunner() {
@@ -51,35 +50,30 @@ public class LocalGameRunner {
         scanner.close();
     }
 
-    // MODE 1: Unit Testing (used to test teammate's evaluation function)
+    // MODE 1: Unit Testing
     private void runUnitTesting() {
         System.out.println("\n--- RUNNING UNIT TEST ---");
-        // Initialize a standard board as baseline
         initStandardBoard();
         printBoard();
 
         System.out.println("Board initialized.");
         
-        // --- Connect to teammate's evaluation function ---
-        // 1. Convert 2D array to 1D
         int[] flatBoard = Util.flatten(this.boardState.board);
         
-        // 2. Initialize MinDist evaluator
         MinDist evaluator = new MinDist();
         evaluator.setBoard(flatBoard);
         
         System.out.println("\n>> Tomato-Paste's Territory Visualization:");
-        // 3. Print territory control visualization
         evaluator.visualize();
         
-        // 4. Get score (playerIsWhite = true for white score, false for black score)
-        System.out.printf("\n>> Current Score for White: %.2f%%\n", evaluator.evaluate(true) * 100);
-        System.out.printf(">> Current Score for Black: %.2f%%\n", evaluator.evaluate(false) * 100);
+        // 0 is White, 1 is Black in MinDist
+        System.out.printf("\n>> Current Score for White: %.2f%%\n", evaluator.evaluate((byte)0) * 100);
+        System.out.printf(">> Current Score for Black: %.2f%%\n", evaluator.evaluate((byte)1) * 100);
 
         System.out.println("\nTotal White Legal Moves: " + boardState.generateLegalMoves(1, boardState.board).size());
     }
 
-    // MODE 2: Human vs AI (Console interaction)
+    // MODE 2: Human vs AI
     private void runHumanVsAI(Scanner scanner) {
         System.out.println("\n--- HUMAN (White) vs AI (Black) ---");
         initStandardBoard();
@@ -87,44 +81,42 @@ public class LocalGameRunner {
         while (true) {
             printBoard();
             
-            // --- Print live evaluation ---
             MinDist evaluator = new MinDist();
             evaluator.setBoard(Util.flatten(this.boardState.board));
             System.out.printf("[Live Eval] White: %.1f%% | Black: %.1f%%\n\n", 
-                    evaluator.evaluate(true) * 100, 
-                    evaluator.evaluate(false) * 100);
+                    evaluator.evaluate((byte)0) * 100, 
+                    evaluator.evaluate((byte)1) * 100);
             
-            // 1. Human turn (White)
+            // Human Turn (White)
             System.out.println("Your turn (White). Enter your move as 6 numbers (qStartR qStartC qEndR qEndC arrR arrC) in 1-10 format:");
             System.out.print("> ");
             int sr = scanner.nextInt(); int sc = scanner.nextInt();
             int er = scanner.nextInt(); int ec = scanner.nextInt();
             int ar = scanner.nextInt(); int ac = scanner.nextInt();
             
-            // Convert to 0-9 index and wrap into move object
             AmazonMove humanMove = new AmazonMove(
                 new int[]{sr - 1, sc - 1}, 
                 new int[]{er - 1, ec - 1}, 
                 new int[]{ar - 1, ac - 1}
             );
             
-            applyMoveLocally(humanMove, 1); // 1 = White
+            applyMoveLocally(humanMove, 1);
             
-            if (isGameOver(2)) { // If Black has no moves left
+            if (isGameOver(2)) {
                 printBoard();
                 System.out.println("Congratulations! You beat the AI.");
                 break;
             }
 
-            // 2. AI turn (Black)
+            // AI Turn (Black)
             System.out.println("\nAI is thinking...");
-            AmazonMove aiMove = getRandomMove(2); // Temporary random AI
+            AmazonMove aiMove = getAIMove(2);
             if (aiMove == null) {
                 System.out.println("AI is out of moves! You win.");
                 break;
             }
             
-            applyMoveLocally(aiMove, 2); // 2 = Black
+            applyMoveLocally(aiMove, 2);
             System.out.println("AI played.");
             
             if (isGameOver(1)) {
@@ -135,16 +127,16 @@ public class LocalGameRunner {
         }
     }
 
-    // MODE 3: AI vs AI (Stress test)
+    // MODE 3: AI vs AI
     private void runAIVsAI() {
         System.out.println("\n--- AI vs AI STRESS TEST ---");
         initStandardBoard();
         
         int turnCount = 0;
-        int currentPlayer = 1; // White starts
+        int currentPlayer = 1;
 
         while (true) {
-            AmazonMove move = getRandomMove(currentPlayer);
+            AmazonMove move = getAIMove(currentPlayer);
             
             if (move == null) {
                 printBoard();
@@ -156,19 +148,16 @@ public class LocalGameRunner {
             applyMoveLocally(move, currentPlayer);
             turnCount++;
             
-            // Switch player (1 -> 2 -> 1)
             currentPlayer = (currentPlayer == 1) ? 2 : 1;
         }
     }
 
+    // ==========================================
     // UTILITY METHODS
+    // ==========================================
 
-    /**
-     * Manually set up the standard Amazons starting position
-     */
     private void initStandardBoard() {
         int[][] b = this.boardState.board;
-        // Clear board
         for (int r = 0; r < 10; r++) 
             for (int c = 0; c < 10; c++) 
                 b[r][c] = 0;
@@ -179,37 +168,47 @@ public class LocalGameRunner {
         b[9][3] = 2; b[9][6] = 2; b[6][0] = 2; b[6][9] = 2;
     }
 
-    /**
-     * Apply a move to the local board state
-     */
     private void applyMoveLocally(AmazonMove move, int color) {
-        boardState.board[move.qStart[0]][move.qStart[1]] = 0;     // Remove queen
-        boardState.board[move.qEnd[0]][move.qEnd[1]] = color;     // Place queen
-        boardState.board[move.arrow[0]][move.arrow[1]] = 3;       // Shoot arrow
+        boardState.board[move.qStart[0]][move.qStart[1]] = 0;
+        boardState.board[move.qEnd[0]][move.qEnd[1]] = color;
+        boardState.board[move.arrow[0]][move.arrow[1]] = 3;
     }
 
     /**
-     * A very naive random AI (placeholder for testing)
+     * Adapter method to call the AlphaBeta engine and decode the result into AmazonMove.
      */
-    private AmazonMove getRandomMove(int color) {
-        ArrayList<AmazonMove> legalMoves = boardState.generateLegalMoves(color, boardState.board);
-        if (legalMoves.isEmpty()) {
-            return null; // No moves available
-        }
-        int randomIndex = (int) (Math.random() * legalMoves.size());
-        return legalMoves.get(randomIndex);
+    private AmazonMove getAIMove(int color) {
+        // Convert 1(White)/2(Black) to 0(White)/1(Black)
+        byte teammateColor = (color == 1) ? (byte) 0 : (byte) 1;
+
+        AlphaBeta aiEngine = new AlphaBeta(new MinDist(), teammateColor);
+        aiEngine.setTimeLimit(5); 
+        aiEngine.showOutput(); 
+
+        aiEngine.setBoard(Util.flatten(this.boardState.board));
+
+        int encodedMove = aiEngine.execute();
+        
+        // Game over protection
+        if (encodedMove == 0) return null; 
+
+        // Decode the 0-99 1D coordinates from the integer
+        byte startIdx = Move.start(encodedMove);
+        byte endIdx   = Move.end(encodedMove);
+        byte arrowIdx = Move.arrow(encodedMove);
+
+        // Convert 1D coordinates to 2D coordinates
+        int[] startCoords = { startIdx / 10, startIdx % 10 };
+        int[] endCoords   = { endIdx / 10, endIdx % 10 };
+        int[] arrowCoords = { arrowIdx / 10, arrowIdx % 10 };
+
+        return new AmazonMove(startCoords, endCoords, arrowCoords);
     }
 
-    /**
-     * Check whether a player has no legal moves
-     */
     private boolean isGameOver(int color) {
         return boardState.generateLegalMoves(color, boardState.board).isEmpty();
     }
 
-    /**
-     * Print a formatted 10x10 board to the console
-     */
     private void printBoard() {
         System.out.println("\n   a b c d e f g h i j");
         System.out.println("   -------------------");
