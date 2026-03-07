@@ -13,6 +13,8 @@ import ubc.cosc322.eval.Util;
  * Provides three different testing modes.
  */
 public class LocalGameRunner {
+	private static final byte WHITE = 0;
+	private static final byte BLACK = 0;
 
     // Use the refactored board model
     private BoardState boardState;
@@ -72,9 +74,9 @@ public class LocalGameRunner {
         // 3. Print territory control visualization
         evaluator.visualize();
         
-        // 4. Get score (playerIsWhite = true for white score, false for black score)
-        System.out.printf("\n>> Current Score for White: %.2f%%\n", evaluator.evaluate(true) * 100);
-        System.out.printf(">> Current Score for Black: %.2f%%\n", evaluator.evaluate(false) * 100);
+        // 4. Get score (playerIsWhite = 0 for white score, 1 for black score)
+        System.out.printf("\n>> Current Score for White: %.2f%%\n", evaluator.evaluate(WHITE) * 100);
+        System.out.printf(">> Current Score for Black: %.2f%%\n", evaluator.evaluate(BLACK) * 100);
 
         System.out.println("\nTotal White Legal Moves: " + boardState.generateLegalMoves(1, boardState.board).size());
     }
@@ -91,8 +93,8 @@ public class LocalGameRunner {
             MinDist evaluator = new MinDist();
             evaluator.setBoard(Util.flatten(this.boardState.board));
             System.out.printf("[Live Eval] White: %.1f%% | Black: %.1f%%\n\n", 
-                    evaluator.evaluate(true) * 100, 
-                    evaluator.evaluate(false) * 100);
+                    evaluator.evaluate(WHITE) * 100, 
+                    evaluator.evaluate(BLACK) * 100);
             
             // 1. Human turn (White)
             System.out.println("Your turn (White). Enter your move as 6 numbers (qStartR qStartC qEndR qEndC arrR arrC) in 1-10 format:");
