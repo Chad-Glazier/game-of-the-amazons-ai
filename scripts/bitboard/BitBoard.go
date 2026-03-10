@@ -20,7 +20,7 @@ type BitBoard = [2]int64
 
 func Flag(board *BitBoard, row, col int) {
 	index := row*10 + col
-	board[index>>6] |= (1 << (index & 63))
+	board[index >> 6] |= (1 << (index & 63))
 }
 
 func Clear(board *BitBoard) {

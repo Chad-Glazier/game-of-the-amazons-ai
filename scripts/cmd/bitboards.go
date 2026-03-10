@@ -175,10 +175,13 @@ func writeInclusiveRayBoards(w io.Writer) {
 	 * long[] ray = P.ray[32][P.N];
 	 * }</pre>
 	 * 
-	 * NOTE: This matrix is distinct from {@link #ray} because this one
-	 * includes the given position as part of the ray. You shouldn't typically
-	 * use this for queen movements, but it may be useful in calculating
-	 * the ray segment that should be removed due to a blocker.
+	 * This matrix is distinct from {@link #ray} because this one includes the
+	 * given position as part of the ray. You shouldn't typically use this for
+	 * queen movements, but it may be useful in calculating the ray segment
+	 * that should be removed due to a blocker.
+	 *
+	 * Note: The index P.ray[100] is defined for all directions, but only holds
+	 * empty boards.
 	 */
 	public static final long[][][] inclusiveRay = {` + "\n"))
 
@@ -193,7 +196,15 @@ func writeInclusiveRayBoards(w io.Writer) {
 			fmt.Fprintf(w, "\t\t},\n")
 		}
 	}
-
+		
+	fmt.Fprintf(w, "\t\t{\n")
+	for range 8 {
+		fmt.Fprintf(w, "\t\t\t")
+		bitboard.Write(w, bitboard.BitBoard{})
+		fmt.Fprintf(w, ",\n")
+	}
+	fmt.Fprintf(w, "\t\t},\n")
+	
 	fmt.Fprintf(w, "\t};\n")
 }
 

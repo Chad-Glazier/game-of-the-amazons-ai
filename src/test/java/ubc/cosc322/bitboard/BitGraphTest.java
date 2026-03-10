@@ -9,7 +9,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import ubc.cosc322.util.Graph;
 
 public class BitGraphTest {
-
 	@Test
 	void testCorrectness() {
 		for (byte queen = 0; queen < 100; queen++) {

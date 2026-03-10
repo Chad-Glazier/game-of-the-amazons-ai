@@ -167,7 +167,7 @@ public class BitBoard {
 		if (bitboard[1] != 0) {
 			return (byte) (64 + Long.numberOfTrailingZeros(bitboard[1]));
 		}
-		return -1;
+		return 100;
 	}
 
 	/**
@@ -182,6 +182,6 @@ public class BitBoard {
 		if (bitboard[0] != 0) {
 			return (byte) (63 - Long.numberOfLeadingZeros(bitboard[0]));
 		}
-		return -1;
+		return 100;
 	}
 }

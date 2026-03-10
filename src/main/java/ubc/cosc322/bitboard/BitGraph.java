@@ -17,6 +17,8 @@ public class BitGraph {
 
 		final long[] moves = new long[2];
 
+		final long[][] rays = P.ray[position];
+
 		long[] ray;
 		byte nearestBlocker;
 		long[] blockedSegment;
@@ -25,146 +27,108 @@ public class BitGraph {
 		// FORWARD DIRECTION -- West
 		//
 
-		ray = P.ray[position][P.W];
+		ray = rays[P.W];
 		nearestBlocker = BitBoard.msb(new long[]{ 
 			ray[0] & occupied[0],
 			ray[1] & occupied[1]
 		});
-		if (nearestBlocker == -1) {
-			moves[0] |= ray[0];
-			moves[1] |= ray[1];
-		} else {
-			blockedSegment = P.inclusiveRay[nearestBlocker][P.W];
-			moves[0] |= ray[0] ^ blockedSegment[0];
-			moves[1] |= ray[1] ^ blockedSegment[1];
-		}
+		blockedSegment = P.inclusiveRay[nearestBlocker][P.W];
+		moves[0] |= ray[0] ^ blockedSegment[0];
+		moves[1] |= ray[1] ^ blockedSegment[1];
 
 		// 
 		// FORWARD DIRECTION -- Northwest
 		//
 		
-		ray = P.ray[position][P.NW];
+		ray = rays[P.NW];
 		nearestBlocker = BitBoard.msb(new long[]{ 
 			ray[0] & occupied[0],
 			ray[1] & occupied[1]
 		});
-		if (nearestBlocker == -1) {
-			moves[0] |= ray[0];
-			moves[1] |= ray[1];
-		} else {
-			blockedSegment = P.inclusiveRay[nearestBlocker][P.NW];
-			moves[0] |= ray[0] ^ blockedSegment[0];
-			moves[1] |= ray[1] ^ blockedSegment[1];
-		}
+		blockedSegment = P.inclusiveRay[nearestBlocker][P.NW];
+		moves[0] |= ray[0] ^ blockedSegment[0];
+		moves[1] |= ray[1] ^ blockedSegment[1];
 
 		// 
 		// FORWARD DIRECTION -- North
 		//
 		
-		ray = P.ray[position][P.N];
+		ray = rays[P.N];
 		nearestBlocker = BitBoard.msb(new long[]{ 
 			ray[0] & occupied[0],
 			ray[1] & occupied[1]
 		});
-		if (nearestBlocker == -1) {
-			moves[0] |= ray[0];
-			moves[1] |= ray[1];
-		} else {
-			blockedSegment = P.inclusiveRay[nearestBlocker][P.N];
-			moves[0] |= ray[0] ^ blockedSegment[0];
-			moves[1] |= ray[1] ^ blockedSegment[1];
-		}
+		blockedSegment = P.inclusiveRay[nearestBlocker][P.N];
+		moves[0] |= ray[0] ^ blockedSegment[0];
+		moves[1] |= ray[1] ^ blockedSegment[1];
 
 		// 
 		// FORWARD DIRECTION -- Northeast
 		//
 		
-		ray = P.ray[position][P.NE];
+		ray = rays[P.NE];
 		nearestBlocker = BitBoard.msb(new long[]{ 
 			ray[0] & occupied[0],
 			ray[1] & occupied[1]
 		});
-		if (nearestBlocker == -1) {
-			moves[0] |= ray[0];
-			moves[1] |= ray[1];
-		} else {
-			blockedSegment = P.inclusiveRay[nearestBlocker][P.NE];
-			moves[0] |= ray[0] ^ blockedSegment[0];
-			moves[1] |= ray[1] ^ blockedSegment[1];
-		}
+		blockedSegment = P.inclusiveRay[nearestBlocker][P.NE];
+		moves[0] |= ray[0] ^ blockedSegment[0];
+		moves[1] |= ray[1] ^ blockedSegment[1];
 
 		// 
 		// REVERSE DIRECTION -- East
 		//
 		
-		ray = P.ray[position][P.E];
+		ray = rays[P.E];
 		nearestBlocker = BitBoard.lsb(new long[]{ 
 			ray[0] & occupied[0],
 			ray[1] & occupied[1]
 		});
-		if (nearestBlocker == -1) {
-			moves[0] |= ray[0];
-			moves[1] |= ray[1];
-		} else {
-			blockedSegment = P.inclusiveRay[nearestBlocker][P.E];
-			moves[0] |= ray[0] ^ blockedSegment[0];
-			moves[1] |= ray[1] ^ blockedSegment[1];
-		}
+		blockedSegment = P.inclusiveRay[nearestBlocker][P.E];
+		moves[0] |= ray[0] ^ blockedSegment[0];
+		moves[1] |= ray[1] ^ blockedSegment[1];
 
 		// 
 		// REVERSE DIRECTION -- Southeast
 		//
 		
-		ray = P.ray[position][P.SE];
+		ray = rays[P.SE];
 		nearestBlocker = BitBoard.lsb(new long[]{ 
 			ray[0] & occupied[0],
 			ray[1] & occupied[1]
 		});
-		if (nearestBlocker == -1) {
-			moves[0] |= ray[0];
-			moves[1] |= ray[1];
-		} else {
-			blockedSegment = P.inclusiveRay[nearestBlocker][P.SE];
-			moves[0] |= ray[0] ^ blockedSegment[0];
-			moves[1] |= ray[1] ^ blockedSegment[1];
-		}
+		blockedSegment = P.inclusiveRay[nearestBlocker][P.SE];
+		moves[0] |= ray[0] ^ blockedSegment[0];
+		moves[1] |= ray[1] ^ blockedSegment[1];
 
 		// 
 		// REVERSE DIRECTION -- South
 		//
 		
-		ray = P.ray[position][P.S];
+		ray = rays[P.S];
 		nearestBlocker = BitBoard.lsb(new long[]{ 
 			ray[0] & occupied[0],
 			ray[1] & occupied[1]
 		});
-		if (nearestBlocker == -1) {
-			moves[0] |= ray[0];
-			moves[1] |= ray[1];
-		} else {
-			blockedSegment = P.inclusiveRay[nearestBlocker][P.S];
-			moves[0] |= ray[0] ^ blockedSegment[0];
-			moves[1] |= ray[1] ^ blockedSegment[1];
-		}
+		blockedSegment = P.inclusiveRay[nearestBlocker][P.S];
+		moves[0] |= ray[0] ^ blockedSegment[0];
+		moves[1] |= ray[1] ^ blockedSegment[1];
 
 		// 
 		// REVERSE DIRECTION -- Southwest
 		//
 		
-		ray = P.ray[position][P.SW];
+		ray = rays[P.SW];
 		nearestBlocker = BitBoard.lsb(new long[]{ 
 			ray[0] & occupied[0],
 			ray[1] & occupied[1]
 		});
-		if (nearestBlocker == -1) {
-			moves[0] |= ray[0];
-			moves[1] |= ray[1];
-		} else {
-			blockedSegment = P.inclusiveRay[nearestBlocker][P.SW];
-			moves[0] |= ray[0] ^ blockedSegment[0];
-			moves[1] |= ray[1] ^ blockedSegment[1];
-		}
+		blockedSegment = P.inclusiveRay[nearestBlocker][P.SW];
+		moves[0] |= ray[0] ^ blockedSegment[0];
+		moves[1] |= ray[1] ^ blockedSegment[1];
 
 		return moves;
 	}
+
+	
 }
