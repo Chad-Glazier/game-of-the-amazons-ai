@@ -184,4 +184,28 @@ public class BitBoard {
 		}
 		return 100;
 	}
+
+	/**
+	 * Returns <code>true</code> if and only if the bitboard is all zeros.
+	 */
+	public static boolean isEmpty(long[] bitboard) {
+		return bitboard[0] == 0 && bitboard[1] == 0;
+	}
+
+	/**
+	 * Removes the least-significant bit from the board and returns its index.
+	 * 
+	 * If the bitboard is empty, this returns <code>-1</code>.
+	 */
+	public static byte poll(long[] bitboard) {
+		byte idx = -1;
+		if (bitboard[0] != 0) {
+			idx = (byte) Long.numberOfTrailingZeros(bitboard[0]);
+			bitboard[0] &= bitboard[0] - 1;
+		} else if (bitboard[1] != 0) {
+			idx = (byte) (64 + Long.numberOfTrailingZeros(bitboard[0]));
+			bitboard[1] &= bitboard[1] - 1;
+		}
+		return idx;
+	}
 }

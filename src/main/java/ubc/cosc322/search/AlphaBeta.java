@@ -14,15 +14,15 @@ class SearchTimeout extends RuntimeException {}
  * This function implements minimax search with α-β pruning and iterative
  * deepening. At the time of writing, there is no constraint on search breadth,
  * nor any move ordering. This makes the algorithm notably weak in the early
- * and mid game, but its completeness makes it extremely potent in end-games.
+ * and mid game, but its completeness makes it potent in end-games.
  * 
  * <br /><br />
  * 
  * As this algorithm uses iterative deepening, it will continue running until
  * its time limit runs out to find the best result. To set a specific time 
  * limit, run 
- * {@link TimeConstrained#setTimeLimit()} or 
- * {@link TimeConstrained#setTimeLimitMs()}.
+ * {@link #setTimeLimit()} or 
+ * {@link #setTimeLimitMs()}.
  * 
  * <h4>Example</h4>
  * 
@@ -166,14 +166,13 @@ public class AlphaBeta
 	}
 
 	private int bestMove(int depth) throws TimeoutException {
-		double alpha = Double.MIN_VALUE;
-		double beta = Double.MAX_VALUE;
+		double alpha = Double.NEGATIVE_INFINITY;
+		double beta = Double.POSITIVE_INFINITY;
 
 		int bestMove = 0;
-		double bestScore = Double.MIN_VALUE;
+		double bestScore = Double.NEGATIVE_INFINITY;
 
 		for (int move : root.moves()) {
-			checkTimeOccasionally();
 
 			State child = new State(root, move);
 
@@ -204,10 +203,9 @@ public class AlphaBeta
 		}
 
 		if (state.activePlayer() == player) {
-			double value = Double.MIN_VALUE;
+			double value = Double.NEGATIVE_INFINITY;
 			
 			for (int move : state.moves()) {
-				checkTimeOccasionally();
 
 				State child = new State(state, move);
 
@@ -223,10 +221,9 @@ public class AlphaBeta
 			return value;
 		}
 
-		double value = Double.MAX_VALUE;
+		double value = Double.POSITIVE_INFINITY;
 
 		for (int move : state.moves()) {
-			checkTimeOccasionally();
 
 			State child = new State(state, move);
 

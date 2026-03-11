@@ -1,7 +1,7 @@
 package ubc.cosc322.bitboard;
 
 public class BitGraph {
-	public static long[] neighbors(byte position, long[] occupied) {
+	public static long[] neighbors(byte position, long[] occupancy) {
 
 		// We divide the 8 directions into two groups:
 		// - "forward" directions are those where the bits most distant from
@@ -13,7 +13,7 @@ public class BitGraph {
 		// a direction is less than or equal to P.NE (3), then it is a forward
 		// direction. Otherwise, it is a reverse direction.
 
-		BitBoard.unflag(occupied, position);
+		final long[] occupied = BitBoard.unflagCopy(occupancy, position);
 
 		final long[] moves = new long[2];
 
@@ -130,5 +130,11 @@ public class BitGraph {
 		return moves;
 	}
 
-	
+	public static byte[] queenDistance(byte position, long[] occupancy) {
+		return new byte[100];
+	}
+
+	public static byte[] kingDistance(byte position, long[] occupancy) {
+		return new byte[100];
+	}
 }
