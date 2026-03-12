@@ -130,6 +130,33 @@ public class BitGraph {
 		return moves;
 	}
 
+	/**
+	 * 
+	 * 
+	 * @param positions A bitboard with each possible origin flagged. This
+	 * argument <em>will be mutated</em>.
+	 * @param occupancy
+	 * @return
+	 */
+	public static long[] neighbors(long[] positions, long[] occupancy) {
+
+		long[] domain = BitBoard.create();
+
+		for (
+			byte position = BitBoard.poll(positions);
+			position != -1;
+			position = BitBoard.poll(positions)
+		) {
+			long[] adjacent = neighbors(position, occupancy);
+
+			domain[0] |= adjacent[0];
+			domain[1] |= adjacent[1];
+		}
+
+		return domain;
+
+	}
+
 	public static byte[] queenDistance(byte position, long[] occupancy) {
 		return new byte[100];
 	}

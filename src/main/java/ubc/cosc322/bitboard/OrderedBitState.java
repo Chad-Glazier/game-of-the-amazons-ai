@@ -1,21 +1,16 @@
 package ubc.cosc322.bitboard;
 
-import java.util.Iterator;
-
 import it.unimi.dsi.fastutil.ints.IntAVLTreeSet;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntComparator;
-import it.unimi.dsi.fastutil.ints.IntIterable;
-import it.unimi.dsi.fastutil.ints.IntIterator;
 import ubc.cosc322.eval.HeuristicMethod;
 
-public class OrderedBitState extends BitState {
+public class OrderedBitState {
 	private static final int MAX_CHILDREN = 400;
 
-	private final long[] occupancy = new long[2];
-	private final byte[] queens = new byte[8];
-	private final byte activePlayer;
-	
+	private final BitState state;
+	private final HeuristicMethod heuristic;
+	private final IntAVLTreeSet[] killers;
+	private final int depth;
+
 	/**
 	 * 
 	 * @param activePlayer The player who can make a move from this state;
@@ -32,24 +27,15 @@ public class OrderedBitState extends BitState {
 	 * at this ply. These moves will be prioritized above all others.
 	 */
 	public OrderedBitState(
-		byte activePlayer,
-		long[] occupancy, 
-		byte[] queens,
+		BitState state,
 		HeuristicMethod heuristic,
 		IntAVLTreeSet[] killers,
 		int depth
 	) {
-		this.activePlayer = activePlayer;
-		this.occupancy[0] = occupancy[0];
-		this.occupancy[1] = occupancy[1];	
-		this.queens[0] = queens[0];
-		this.queens[1] = queens[1];
-		this.queens[2] = queens[2];
-		this.queens[3] = queens[3];
-		this.queens[4] = queens[4];
-		this.queens[5] = queens[5];
-		this.queens[6] = queens[6];
-		this.queens[7] = queens[7];
+		this.state = state;
+		this.heuristic = heuristic;
+		this.killers = killers;
+		this.depth = depth;
 	}
 
 

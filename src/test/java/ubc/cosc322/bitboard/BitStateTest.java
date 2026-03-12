@@ -71,7 +71,9 @@ public class BitStateTest {
 				newBlack[3],
 			};
 			byte activePlayer = BLACK;
-			allStates[i] = new BitState(newOcc, newQueens, activePlayer);
+			allStates[i] = new BitState(
+				newOcc, newQueens, activePlayer, allMoves.getInt(i)
+			);
 		}
 
 		// generate states with the new method.
@@ -92,6 +94,7 @@ public class BitStateTest {
 			for (BitState state : allStates) {
 				if (child.equals(state)) {
 					matchFound = true;
+					assertEquals(child.move, state.move);
 					break;
 				}
 			}

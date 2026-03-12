@@ -1,5 +1,9 @@
 package ubc.cosc322.bitboard;
 
+import java.util.Arrays;
+
+import ubc.cosc322.util.Move;
+
 class BitStateGenerator {
 	private final static byte WHITE = 0;
 	private final static byte BLACK = 1;
@@ -34,6 +38,13 @@ class BitStateGenerator {
 	}
 
 	public BitState next() {
+		//
+		// TODO: Optimize by replacing `poll`. Right now, `poll` will scan
+		// both `long`s in a bitboard if needed, which leads to unnecessary
+		// operations if we already know that the `lo` half of the bitboard
+		// has been exhausted.
+		//
+
 		// try to get the next arrow
 		byte arrow = BitBoard.poll(arrows);
 		
@@ -67,19 +78,17 @@ class BitStateGenerator {
 			arrow = BitBoard.poll(arrows);
 		}
 
-		BitState child = new BitState();
-		child.activePlayer = parent.activePlayer == WHITE ? BLACK : WHITE;
-		child.occupancy = BitBoard.flagCopy(occupancy, arrow);
-		child.queens = new byte[] {
-			parent.queens[0],
-			parent.queens[1],
-			parent.queens[2],
-			parent.queens[3],
-			parent.queens[4],
-			parent.queens[5],
-			parent.queens[6],
-			parent.queens[7],
-		};
+		BitState child = new BitState(
+			BitBoard.flagCopy(occupancy, arrow),
+			Arrays.copyOf(parent.queens, 8),
+			parent.activePlayer == WHITE ? BLACK : WHITE,
+			Move.encode(
+				parent.queens[queenIdx], 
+				destination, 
+				arrow, 
+				parent.activePlayer
+			)
+		);
 		child.queens[queenIdx] = destination;
 		
 		return child;
