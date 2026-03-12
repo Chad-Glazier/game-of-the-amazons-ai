@@ -3,7 +3,7 @@ package ubc.cosc322.bitboard;
 import it.unimi.dsi.fastutil.ints.IntAVLTreeSet;
 import ubc.cosc322.eval.HeuristicMethod;
 
-public class OrderedBitState {
+public class OrderedState {
 	private static final int MAX_CHILDREN = 400;
 
 	private final BitState state;
@@ -26,7 +26,7 @@ public class OrderedBitState {
 	 * @param killers A set of moves that have been potent in prior iterations
 	 * at this ply. These moves will be prioritized above all others.
 	 */
-	public OrderedBitState(
+	public OrderedState(
 		BitState state,
 		HeuristicMethod heuristic,
 		IntAVLTreeSet[] killers,
