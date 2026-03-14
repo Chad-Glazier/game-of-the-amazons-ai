@@ -1,10 +1,10 @@
-package ubc.cosc322.bitboard;
+package ubc.cosc322.state;
 
 import java.util.Arrays;
 
-import ubc.cosc322.util.Move;
+import ubc.cosc322.bitboard.BitBoard;
 
-class StateGenerator {
+public class StateGenerator {
 	private final static byte WHITE = 0;
 	private final static byte BLACK = 1;
 

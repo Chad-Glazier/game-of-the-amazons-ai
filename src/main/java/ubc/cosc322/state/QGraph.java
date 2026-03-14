@@ -1,4 +1,7 @@
-package ubc.cosc322.bitboard;
+package ubc.cosc322.state;
+
+import ubc.cosc322.bitboard.BitBoard;
+import ubc.cosc322.bitboard.P;
 
 public class QGraph {
 	public static long[] neighbors(byte position, long[] occupancy) {
