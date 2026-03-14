@@ -36,5 +36,4 @@ The file structure of the test folder should mirror the main folder, and tests f
 ## Dependencies 
 
 This project depends on the following packages:
-- [fastutil](https://javadoc.io/doc/it.unimi.dsi/fastutil/latest/index.html), which we use for alternatives to `ArrayList` that avoid the performance overhead of boxing numeric values.
 - [Junit](https://docs.junit.org/5.10.5/user-guide/), which is used for creating the unit tests [here](src/test/java/ubc/cosc322/).
