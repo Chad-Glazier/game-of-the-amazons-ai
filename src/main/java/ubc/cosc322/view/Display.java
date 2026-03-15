@@ -159,14 +159,12 @@ public class Display {
 			out += Ansi.BG_CYAN;
 			out += "  ";
 			out += Ansi.RESET;
-			out += Ansi.FG_BRIGHT_WHITE;
-			out += " White";		
+			out += " \"White\"";		
 		} else {
 			out += Ansi.BG_RED;
 			out += "  ";
 			out += Ansi.RESET;
-			out += Ansi.FG_BRIGHT_BLACK;
-			out += " Black";	
+			out += " \"Black\"";	
 		}
 
 		out += Ansi.RESET;
