@@ -6,11 +6,17 @@ This project is meant to implement a simple AI to play the [Game of the Amazons]
 - Zhishang Ma
 - Aaryan Oberoi
 
-# Running the Project
+## Running the Project
 
-(*The project doesn't run right now.*)
+You can run a demo of the project, which makes the bot play against itself, by running this command:
 
-# Guidelines for Making Contributions
+```sh
+mvn exec:java "-Dexec.mainClass=ubc.cosc322.demo.RunGame"
+```
+
+At the time of writing, this demo doesn't actually check if the game is over, so the end state just kinda freaks out. Just press `Ctrl+C` a couple times.
+
+## Guidelines for Making Contributions
 
 (*This section is for group members.*)
 
@@ -32,6 +38,16 @@ mvn test
 ```
 
 The file structure of the test folder should mirror the main folder, and tests for a given class `ClassName` should be put in a class named `ClassNameTest`. See [BitBoardTest](src/test/java/ubc/cosc322/util/BitBoardTest.java) for a simple example.
+
+### Optional Tests
+
+In the [POM](./pom.xml) file, there is a line,
+
+```xml
+					<excludedGroups>SearchTest</excludedGroups>
+```
+
+If you comment out that line, then the search tests will be included in the test suite. They are normally excluded because they involve simulating games, testing time constraits, and so on, so they are very slow.
 
 ## Dependencies 
 

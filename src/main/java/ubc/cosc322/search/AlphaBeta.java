@@ -7,6 +7,7 @@ import ubc.cosc322.eval.HeuristicMethod;
 import ubc.cosc322.misc.C;
 import ubc.cosc322.state.State;
 import ubc.cosc322.state.StateGenerator;
+import ubc.cosc322.view.Ansi;
 
 /**
  * <h3>Alpha-Beta Search</h3>
@@ -25,13 +26,24 @@ import ubc.cosc322.state.StateGenerator;
  * 
  * <h4>Example</h4>
  * 
- * <pre>{@code
+ * Assume that <code>board</code> and <code>heuristic</code> are already 
+ * defined.
  * 
+ * <pre>{@code
+ * SearchMethod alphaBeta = new AlphaBeta(board, heuristic, C.WHITE);
+ * alphaBeta.setTimeLimit(10); // 10 seconds per search
+ * alphaBeta.setShowOutput(true); // `false` by default
+ * 
+ * // Then, whenever the boardstate changes,
+ * alphaBeta.setBoard(board);
+ * int move = alphaBeta.search();
  * }</pre>
  * 
+ * Configuration options like the time limit and the maximizing player color
+ * will be preserved between <code>search</code> calls. The only thing you 
+ * need to remember to update is the board state.
  * 
- * 
- * <br /><br />
+ * <h4>Remarks</h4>
  * 
  * The <code>move</code> output of a search function is an encoded integer. To
  * get details about the move from this integer, use the methods from the
@@ -54,7 +66,10 @@ import ubc.cosc322.state.StateGenerator;
  *  <li>Schaeffer, J. <em><a href="https://webdocs.cs.ualberta.ca/~jonathan/publications/ai_publications/pami.pdf">The History Heuristic and Alpha-Beta Search Enhancements in Practice</a></em>.</li>
  * </ul>
  */
-public class AlphaBeta extends TimeConstrained {
+public class AlphaBeta 
+	extends TimeConstrained 
+	implements SearchMethod
+	{
 	private static final int MAX_DEPTH = 100;
 
 	/** The table of history scores. */
@@ -70,7 +85,7 @@ public class AlphaBeta extends TimeConstrained {
 	/** Indicates whether or not we want to see output to the console. */
 	private boolean showOutput = false;
 
-	AlphaBeta(
+	public AlphaBeta(
 		State initialState, 
 		HeuristicMethod heuristic,
 		byte maximizingPlayer
@@ -101,10 +116,11 @@ public class AlphaBeta extends TimeConstrained {
 	//
 
 	public int search() {
+		startTimer();
 		int bestMove = 0;
 
-		for (int depth = 1; depth < MAX_DEPTH; depth++) {
-			try {
+		try {
+			for (int depth = 1; depth < MAX_DEPTH; depth++) {
 				int bestMoveAtDepth = depthLimitedSearch(depth);
 				if (bestMoveAtDepth == 0) {
 					break;
@@ -112,22 +128,17 @@ public class AlphaBeta extends TimeConstrained {
 					bestMove = bestMoveAtDepth;
 					if (showOutput) {
 						System.out.printf(
-							"\nSearch complete at depth %d.", 
-							depth
+							Ansi.MOVE_CURSOR_TO_LINE_START + 
+							Ansi.FG_BRIGHT_BLACK +
+							"    Searching at depth %d..." +
+							Ansi.RESET, 
+							depth + 1
 						);
 					}
-				}				
-			} catch (TimeoutException e) {
-				if (showOutput) {
-					System.out.printf(
-						"\nTimeout at depth %d.\n", 
-						depth
-					);
 				}
-			}
-
-		}
-
+			}				
+		} catch (TimeoutException e) {}
+		
 		return bestMove;
 	}
 
