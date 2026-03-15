@@ -39,11 +39,16 @@ public class Ansi {
     public static final String BG_BRIGHT_CYAN    = "\u001B[106m";
     public static final String BG_BRIGHT_WHITE   = "\u001B[107m";
 
-    public static final String BOLD      = "\u001B[1m";
-    public static final String DIM       = "\u001B[2m";
-    public static final String ITALIC    = "\u001B[3m";
-    public static final String UNDERLINE = "\u001B[4m";
-    public static final String BLINK     = "\u001B[5m";
-    public static final String REVERSE   = "\u001B[7m";
-    public static final String HIDDEN    = "\u001B[8m";
+    public static final String BOLD          = "\u001B[1m";
+    public static final String DIM           = "\u001B[2m";
+    public static final String ITALIC        = "\u001B[3m";
+    public static final String UNDERLINE     = "\u001B[4m";
+    public static final String BLINK         = "\u001B[5m";
+    public static final String REVERSE       = "\u001B[7m";
+    public static final String HIDDEN        = "\u001B[8m";
+	public static final String STRIKETHROUGH = "\u001B[9m";
+
+	public static final String ERASE_SCREEN = "\u001B[2J";
+	public static final String RESET_CURSOR = "\u001B[H";
+	public static final String MOVE_CURSOR_TO_LINE_START = "\u001B[1G";
 }

@@ -7,6 +7,7 @@ import ubc.cosc322.eval.HeuristicMethod;
 import ubc.cosc322.misc.C;
 import ubc.cosc322.state.State;
 import ubc.cosc322.state.StateGenerator;
+import ubc.cosc322.view.Ansi;
 
 /**
  * <h3>Alpha-Beta Search</h3>
@@ -70,7 +71,7 @@ public class AlphaBeta extends TimeConstrained {
 	/** Indicates whether or not we want to see output to the console. */
 	private boolean showOutput = false;
 
-	AlphaBeta(
+	public AlphaBeta(
 		State initialState, 
 		HeuristicMethod heuristic,
 		byte maximizingPlayer
@@ -101,10 +102,11 @@ public class AlphaBeta extends TimeConstrained {
 	//
 
 	public int search() {
+		startTimer();
 		int bestMove = 0;
 
-		for (int depth = 1; depth < MAX_DEPTH; depth++) {
-			try {
+		try {
+			for (int depth = 1; depth < MAX_DEPTH; depth++) {
 				int bestMoveAtDepth = depthLimitedSearch(depth);
 				if (bestMoveAtDepth == 0) {
 					break;
@@ -112,22 +114,25 @@ public class AlphaBeta extends TimeConstrained {
 					bestMove = bestMoveAtDepth;
 					if (showOutput) {
 						System.out.printf(
-							"\nSearch complete at depth %d.", 
-							depth
+							Ansi.MOVE_CURSOR_TO_LINE_START + 
+							Ansi.FG_BRIGHT_BLACK +
+							"    Searching at depth %d..." +
+							Ansi.RESET, 
+							depth + 1
 						);
 					}
-				}				
-			} catch (TimeoutException e) {
-				if (showOutput) {
-					System.out.printf(
-						"\nTimeout at depth %d.\n", 
-						depth
-					);
 				}
+			}				
+		} catch (TimeoutException e) {
+			if (showOutput) {
+				System.out.printf(
+					Ansi.ITALIC +
+					Ansi.FG_BRIGHT_BLACK +
+					"     Timeout." +
+					Ansi.RESET
+				);
 			}
-
 		}
-
 		return bestMove;
 	}
 

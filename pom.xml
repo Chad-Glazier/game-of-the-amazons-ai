@@ -8,7 +8,9 @@
     <packaging>jar</packaging>
 
     <name>COSC322-Team-09</name>
-    <description>A simple Game of the Amazons AI for group 09 in COSC 322</description>
+    <description>
+		A simple Game of the Amazons AI for group 09 in COSC 322
+	</description>
     <inceptionYear>2026</inceptionYear>
 	
     <dependencies>
