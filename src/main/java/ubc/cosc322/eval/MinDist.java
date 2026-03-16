@@ -87,8 +87,7 @@ public class MinDist implements HeuristicMethod {
 			visited[1] |= blackFrontier[1];
 		}
 
-		return 
-			(BitBoard.count(whiteTerritory) - BitBoard.count(blackTerritory))
-			/ (double) BitBoard.count(visited); 
+		return (BitBoard.count(whiteTerritory) - BitBoard.count(blackTerritory))
+				/ (double) (BitBoard.count(visited) - 7); 			
 	}
 }
