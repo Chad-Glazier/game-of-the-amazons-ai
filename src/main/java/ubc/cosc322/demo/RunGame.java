@@ -15,10 +15,10 @@ public class RunGame {
 		Display.printBoard(board, "Alpha-Beta vs Alpha-Beta");
 
 		AlphaBeta edi = new AlphaBeta(board, new MinDist(), C.WHITE);
-		edi.setTimeLimit(2);
+		edi.setTimeLimit(10);
 		edi.setShowOutput(true);
 		AlphaBeta legion = new AlphaBeta(board, new MinDist(), C.BLACK);
-		legion.setTimeLimit(2);
+		legion.setTimeLimit(10);
 		legion.setShowOutput(true);
 
 		for (

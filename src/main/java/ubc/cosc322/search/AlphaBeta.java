@@ -7,7 +7,6 @@ import ubc.cosc322.eval.HeuristicMethod;
 import ubc.cosc322.state.C;
 import ubc.cosc322.state.State;
 import ubc.cosc322.state.StateGenerator;
-import ubc.cosc322.view.Ansi;
 import ubc.cosc322.view.Display;
 
 /**
