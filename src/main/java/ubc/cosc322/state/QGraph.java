@@ -3,6 +3,17 @@ package ubc.cosc322.state;
 import ubc.cosc322.bitboard.BitBoard;
 import ubc.cosc322.bitboard.P;
 
+/**
+ * This class includes operations that model the board state as a graph, where
+ * <br />
+ * - vertices are board positions, and <br />
+ * - two vertices <code>v</code> and <code>u</code> are adjacent if and only
+ * if a queen could move from one to the other in a single move.<br />
+ * <br />
+ * The queen-move definition of edges is the reason for the "Q" in the name.
+ * 
+ * @see {@link KGraph}
+ */
 public class QGraph {
 	public static long[] neighbors(byte position, long[] occupancy) {
 
@@ -134,10 +145,12 @@ public class QGraph {
 	}
 
 	/**
-	 * 
+	 * Given a set of origins (on a bitboard) and an occupancy board, this
+	 * returns a board where each position is flagged if and only if it is
+	 * adjacent to any one of the origins.
 	 * 
 	 * @param originalPositions A bitboard with each possible origin flagged.
-	 * @param occupancy
+	 * @param occupancy A bitboard with each occupied square flagged.
 	 */
 	public static long[] neighbors(
 		long[] originalPositions, long[] occupancy

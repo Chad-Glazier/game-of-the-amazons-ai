@@ -95,7 +95,7 @@ public class Display {
 	public static void printSystemMessages(LinkedList<String> messages) {
 		Ansi.saveCursor();
 
-		Ansi.moveCursor(3, 80);
+		Ansi.moveCursor(4, 80);
 	
 		System.out.print(Ansi.FG_BRIGHT_BLACK);		
 		System.out.print(Ansi.UNDERLINE + "System messages" + Ansi.RESET);
@@ -106,7 +106,8 @@ public class Display {
 			if (i > 5) {
 				break;
 			}
-			Ansi.moveCursor(4 + i++, 80);
+			Ansi.moveCursor(5 + i++, 80);
+			System.out.print("\u001B[K");
 			System.out.print(Ansi.ITALIC + message);
 		}
 
