@@ -8,17 +8,15 @@ This project is meant to implement a simple AI to play the [Game of the Amazons]
 
 ## Running the Project
 
-You can run a demo of the project, which makes the bot play against itself, by running this command:
+You can run a demo of the project, which makes the bot play against itself, with this command:
 
 ```sh
 mvn exec:java "-Dexec.mainClass=ubc.cosc322.demo.RunGame"
 ```
 
-At the time of writing, this demo doesn't actually check if the game is over, so the end state just kinda freaks out. Just press `Ctrl+C` a couple times.
-
 ### Running in Tournaments
 
-When running the bot in a tournament, make sure that you have the clean, optimized build.
+When running the bot in a tournament, make sure that you have a clean installation.
 
 ```sh
 mvn clean package
@@ -26,7 +24,6 @@ mvn exec:java -Dexec.mainClass=ubc.cosc322.demo.RunGame
 ```
 
 Additionally, make sure that you've set the memory constraints. If you're on Windows, you can do this by running `.\setEnv.ps1` in PowerShell (from this directory).
-
 
 ## Guidelines for Making Contributions
 
@@ -53,10 +50,10 @@ The file structure of the test folder should mirror the main folder, and tests f
 
 ### Optional Tests
 
-In the [POM](./pom.xml) file, there is a line,
+In the [POM](./pom.xml) file, there is this line:
 
 ```xml
-					<excludedGroups>SearchTest</excludedGroups>
+<excludedGroups>SearchTest</excludedGroups>
 ```
 
 If you comment out that line, then the search tests will be included in the test suite. They are normally excluded because they involve simulating games, testing time constraits, and so on, so they are very slow.
