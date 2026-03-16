@@ -3,7 +3,6 @@ package ubc.cosc322.state;
 import java.util.Arrays;
 
 import ubc.cosc322.bitboard.BitBoard;
-import ubc.cosc322.misc.C;
 
 /**
  * Represents a board state using bitboards.
@@ -67,6 +66,7 @@ public class State {
 				BitBoard.unflag(occupancy, queens[i]);
 				queens[i] = Move.end(move);
 				BitBoard.flag(occupancy, queens[i]);
+				break;
 			}
 		}
 
@@ -90,5 +90,22 @@ public class State {
 			activePlayer, 
 			move
 		);
+	}
+
+	/**
+	 * Updates this board's occupancy and queen positions to match the given
+	 * state.
+	 */
+	public void impose(MinimalState newState) {
+		occupancy[0] = newState.occupancy[0];
+		occupancy[1] = newState.occupancy[1];	
+		queens[0] = newState.queens[0];
+		queens[1] = newState.queens[1];
+		queens[2] = newState.queens[2];
+		queens[3] = newState.queens[3];
+		queens[4] = newState.queens[4];
+		queens[5] = newState.queens[5];
+		queens[6] = newState.queens[6];
+		queens[7] = newState.queens[7];
 	}
 }

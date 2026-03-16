@@ -1,11 +1,120 @@
 package ubc.cosc322.view;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+
 import ubc.cosc322.bitboard.BitBoard;
-import ubc.cosc322.misc.C;
+import ubc.cosc322.eval.HeuristicMethod;
+import ubc.cosc322.eval.MinDist;
+import ubc.cosc322.state.C;
 import ubc.cosc322.state.Move;
 import ubc.cosc322.state.State;
 
 public class Display {
+
+	public static String prompt(String prompt, Map<String, String> options) {
+		clear();
+		printText(-13, prompt + "\n\n    > ");
+
+		@SuppressWarnings("resource")
+		Scanner scanner = new Scanner(System.in);
+
+		String helpPrompt = 
+			"Unrecognized selection. Try one of the ones listed:\n";
+		for (String option : options.keySet()) {
+			helpPrompt += "    ~ " + Ansi.FG_BRIGHT_CYAN + option;
+			helpPrompt += " " + Ansi.FG_BRIGHT_BLACK + options.get(option);
+			helpPrompt += "\n";
+		}
+		helpPrompt += "\n    > ";
+
+		while (true) {
+			String input = scanner.nextLine().trim();
+
+			for (String option : options.keySet()) {
+				if (
+					input.length() > 0 && 
+					option.toLowerCase().startsWith(input.toLowerCase())
+				) {
+					return option;
+				}
+			}
+
+			clear();
+			printText(-13, helpPrompt);
+		}
+	}
+
+	public static String prompt(String prompt, List<String> options) {
+		clear();
+		printText(-13, prompt + "\n\n    > ");
+
+		@SuppressWarnings("resource")
+		Scanner scanner = new Scanner(System.in);
+
+		String helpPrompt = 
+			"Unrecognized selection. Try one of the ones listed:\n";
+		for (String option : options) {
+			helpPrompt += "    ~ " + Ansi.FG_BRIGHT_CYAN + option + Ansi.RESET;
+			helpPrompt += "\n";
+		}
+		helpPrompt += "\n    > ";
+
+		while (true) {
+			String input = scanner.nextLine().trim();
+
+			for (String option : options) {
+				if (
+					input.length() > 0 && 
+					option.toLowerCase().startsWith(input.toLowerCase())
+				) {
+					return option;
+				}
+			}
+
+			clear();
+			printText(-13, helpPrompt);
+		}
+	}
+
+	public static void printText(int line, String text) {
+		Ansi.clear(line + 15);
+		System.out.print("    " + Ansi.FG_BRIGHT_BLACK + text);
+		System.out.print(Ansi.RESET);
+	}
+
+	public static void printBlinkingText(int line, String text) {
+		Ansi.clear(line + 15);
+		System.out.print(Ansi.BLINK);
+		System.out.print("    " + Ansi.FG_BRIGHT_BLACK + text);
+		System.out.print(Ansi.RESET);
+	}
+
+	public static void printSystemMessages(LinkedList<String> messages) {
+		Ansi.saveCursor();
+
+		Ansi.moveCursor(4, 80);
+	
+		System.out.print(Ansi.FG_BRIGHT_BLACK);		
+		System.out.print(Ansi.UNDERLINE + "System messages" + Ansi.RESET);
+
+		System.out.print(Ansi.FG_BRIGHT_BLACK);		
+		int i = 0; 
+		for (String message : messages) {
+			if (i > 5) {
+				break;
+			}
+			Ansi.moveCursor(5 + i++, 80);
+			System.out.print("\u001B[K");
+			System.out.print(Ansi.ITALIC + message);
+		}
+
+		System.out.print(Ansi.RESET);
+		Ansi.restoreCursor();
+	} 
+
     /**
      * Prints a board state to the console.
      */
@@ -68,38 +177,38 @@ public class Display {
                 switch (s) {
 				case "W":
 					System.out.print(
-						Ansi.BG_CYAN + 
-						Ansi.FG_BRIGHT_WHITE +
-						" " + 
-						Ansi.RESET + 
-						" "
+						Ansi.FG_CYAN +	
+						(state.activePlayer == C.WHITE ? 
+							Ansi.BLINK : "") +					
+						"■" + 
+						" " +
+						Ansi.RESET
 					);
 					break;
 				case "B":
 					System.out.print(
-						Ansi.BG_RED + 
-						Ansi.FG_BLACK +
-						" " + 
-						Ansi.RESET + 
-						" "
+						Ansi.FG_RED +
+						(state.activePlayer == C.BLACK ? 
+							Ansi.BLINK : "") +		
+						"■" + 
+						" " +
+						Ansi.RESET
 					);
 					break;
 				case "X":
 					System.out.print(
-						Ansi.BG_BLACK + 
 						Ansi.FG_BRIGHT_BLACK +
 						s + 
-						Ansi.RESET + 
-						" "
+						" " +
+						Ansi.RESET
 					);
 					break;
 				default:
 					System.out.print(
-						Ansi.BG_BLACK + 
 						Ansi.FG_BRIGHT_BLACK +
 						"." + 
-						Ansi.RESET + 
-						" "
+						" " +
+						Ansi.RESET
 					);
                 }
             }
@@ -145,11 +254,48 @@ public class Display {
 					arrowToString(state.move)
 				);
 				break;
+			case 9:
+				System.out.print(
+					Ansi.FG_BRIGHT_BLACK +
+					"MinDist evaluation" +
+					Ansi.RESET
+				);
+				break;
+			case 7:
+				System.out.print(evaluation(state));
+				break;
 			}
             System.out.println();
         }
 		System.out.println(Ansi.RESET);
     }
+
+	private static String evaluation(State state) {
+		HeuristicMethod mindist = new MinDist();
+		double score = (mindist.evaluate(state) + 1) / 2;
+		int width = 35;
+		
+		int blackWidth = (int) (width * (1.0 - score));
+		int whiteWidth = width - blackWidth;
+
+		String out = "";
+		out += Ansi.RESET;
+
+		out += Ansi.BG_CYAN;
+		for (int i = 0; i < whiteWidth; i++) {
+			out += " ";
+		}
+
+		out += Ansi.RESET;
+		out += Ansi.BG_RED;
+		for (int i = 0; i < blackWidth; i++) {
+			out += " ";
+		}
+
+		out += Ansi.RESET;
+
+		return out;
+	}
 
 	private static String playerToString(byte player) {
 		String out = "";
@@ -217,7 +363,7 @@ public class Display {
 		return out;
 	}
 
-	private static void clear() {
+	public static void clear() {
 		System.out.print(Ansi.ERASE_SCREEN + Ansi.RESET_CURSOR);
 	}
 }

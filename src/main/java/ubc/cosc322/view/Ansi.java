@@ -51,4 +51,22 @@ public class Ansi {
 	public static final String ERASE_SCREEN = "\u001B[2J";
 	public static final String RESET_CURSOR = "\u001B[H";
 	public static final String MOVE_CURSOR_TO_LINE_START = "\u001B[1G";
+
+	public static void clear(int line) {
+		System.out.print("\u001b[" + Integer.toString(line) + "d");
+		System.out.print(Ansi.MOVE_CURSOR_TO_LINE_START);
+		System.out.print("\u001b[2K");
+	}
+
+	public static void saveCursor() {
+		System.out.print("\u001B[s");
+	}
+
+	public static void restoreCursor() {
+		System.out.print("\u001B[u");
+	}
+
+	public static void moveCursor(int line, int col) {
+		System.out.print(String.format("\u001B[%d;%dH", line, col));
+	}
 }

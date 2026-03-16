@@ -124,4 +124,28 @@ public class Move {
 
 		return true;
 	}
+
+	/**
+	 * Returns <code>true</code> if and only if a move is legal from a given
+	 * board state.
+	 */
+	public static boolean isLegal(MinimalState board, int move) {
+
+		long[] neighbors = QGraph.neighbors(start(move), board.occupancy);
+
+		if (!BitBoard.flagged(neighbors, end(move))) {
+			return false;
+		}
+
+		long[] occupancy = BitBoard.unflagCopy(board.occupancy, start(move));
+		BitBoard.flag(occupancy, end(move));
+
+		neighbors = QGraph.neighbors(end(move), occupancy);
+
+		if (!BitBoard.flagged(neighbors, arrow(move))) {
+			return false;
+		}
+
+		return true;
+	}
 }
