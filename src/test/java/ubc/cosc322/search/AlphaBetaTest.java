@@ -9,7 +9,7 @@ import ubc.cosc322.eval.MinDist;
 import ubc.cosc322.state.C;
 import ubc.cosc322.state.Move;
 import ubc.cosc322.state.State;
-import ubc.cosc322.view.Util;
+import ubc.cosc322.player.Util;
 
 public class AlphaBetaTest {
 	@Test

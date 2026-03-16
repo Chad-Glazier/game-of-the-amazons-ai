@@ -6,7 +6,7 @@ import ubc.cosc322.state.C;
 import ubc.cosc322.state.Move;
 import ubc.cosc322.state.State;
 import ubc.cosc322.view.Display;
-import ubc.cosc322.view.Util;
+import ubc.cosc322.player.Util;
 
 public class RunGame {
 	public static void main() {
@@ -15,10 +15,10 @@ public class RunGame {
 		Display.printBoard(board, "Alpha-Beta vs Alpha-Beta");
 
 		AlphaBeta edi = new AlphaBeta(board, new MinDist(), C.WHITE);
-		edi.setTimeLimit(5);
+		edi.setTimeLimit(10);
 		edi.setShowOutput(true);
 		AlphaBeta legion = new AlphaBeta(board, new MinDist(), C.BLACK);
-		legion.setTimeLimit(5);
+		legion.setTimeLimit(30);
 		legion.setShowOutput(true);
 
 		for (

@@ -1,6 +1,5 @@
 package ubc.cosc322.state;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import ubc.cosc322.bitboard.BitBoard;
@@ -67,6 +66,7 @@ public class State {
 				BitBoard.unflag(occupancy, queens[i]);
 				queens[i] = Move.end(move);
 				BitBoard.flag(occupancy, queens[i]);
+				break;
 			}
 		}
 
@@ -92,44 +92,20 @@ public class State {
 		);
 	}
 
-	public static State from(
-		ArrayList<Integer> board,
-		byte activePlayer,
-		int latestMove
-	) throws Exception {
-		long[] occupancy = BitBoard.create();
-		byte[] queens = new byte[8];
-
-		int blackIdx = 4;
-		int whiteIdx = 0;
-
-		for (int i = 1; i < 11; i++) {
-			for (int j = 1; j < 11; j++) {
-				byte position = (byte) (10 * (i - 1) + j - 1);
-				switch (board.get(i * 11 + j)) {
-				case 0:
-					continue;
-				case 1:
-					queens[whiteIdx++] = position;
-					BitBoard.flag(occupancy, position);
-					break;
-				case 2:
-					queens[blackIdx++] = position;
-					BitBoard.flag(occupancy, position);
-					break;
-				case 3:
-					BitBoard.flag(occupancy, position);
-					break;
-				default:
-					throw new Exception("Invalid board received.");
-				}
-			}
-		}
-
-		if (blackIdx < 8 || whiteIdx < 4) {
-			throw new Exception("Invalid board received.");
-		}
-
-		return new State(occupancy, queens, activePlayer, latestMove);
+	/**
+	 * Updates this board's occupancy and queen positions to match the given
+	 * state.
+	 */
+	public void impose(MinimalState newState) {
+		occupancy[0] = newState.occupancy[0];
+		occupancy[1] = newState.occupancy[1];	
+		queens[0] = newState.queens[0];
+		queens[1] = newState.queens[1];
+		queens[2] = newState.queens[2];
+		queens[3] = newState.queens[3];
+		queens[4] = newState.queens[4];
+		queens[5] = newState.queens[5];
+		queens[6] = newState.queens[6];
+		queens[7] = newState.queens[7];
 	}
 }
