@@ -68,20 +68,4 @@ public class HeuristicEvaluations {
 	public void MinDistDense() {
 		mindist.evaluate(dense);
 	}
-
-	@Benchmark
-	public void XInitial() {
-		x.evaluate(initial);
-	}
-
-	@Benchmark
-	public void XSparse() {
-		x.evaluate(sparse);
-	}
-
-	@Benchmark
-	public void XDense() {
-		x.evaluate(dense);
-	}
-
 }
