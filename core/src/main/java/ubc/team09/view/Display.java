@@ -160,7 +160,7 @@ public class Display {
 		// We can get the turn count by getting the number of flags in the
 		// occupancy board and subtracting 8, for the queens (this gives us
 		// the number of arrows).
-		int turn = BitBoard.count(BitBoard.copy(state.occupancy)) - 8;
+		int turn = BitBoard.count(state.occupancy) - 8;
 
 		// Clear the console.
 		clear();

@@ -10,78 +10,27 @@ import ubc.team09.state.StateGenerator;
 import ubc.team09.view.Display;
 
 /**
- * <h3>Alpha-Beta Search</h3>
+ * This implementation is largely similar to {@link AlphaBeta} and uses all of
+ * the same optimizations, except that it is meant to be run on multiple 
+ * cores. 
  * 
- * This function implements minimax search with α-β pruning, iterative
- * deepening, and the History heuristic (a generalization of the Killer
- * heuristic).
- * 
- * <br />
- * <br />
- * 
- * As this algorithm uses iterative deepening, it will continue running until
- * its time limit runs out to find the best result. To set a specific time
- * limit, run
- * {@link #setTimeLimit()} or
- * {@link #setTimeLimitMs()}.
- * 
- * <h4>Example</h4>
- * 
- * Assume that <code>board</code> and <code>heuristic</code> are already
- * defined.
- * 
- * <pre>{@code
- * SearchMethod alphaBeta = new AlphaBeta(board, heuristic, C.WHITE);
- * alphaBeta.setTimeLimit(10); // 10 seconds per search
- * alphaBeta.setShowOutput(true); // `false` by default
- * 
- * // Then, whenever the boardstate changes,
- * alphaBeta.setBoard(board);
- * int move = alphaBeta.search();
- * }</pre>
- * 
- * Configuration options like the time limit and the maximizing player color
- * will be preserved between <code>search</code> calls. The only thing you
- * need to remember to update is the board state.
- * 
- * <h4>Remarks</h4>
- * 
- * The <code>move</code> output of a search function is an encoded integer. To
- * get details about the move from this integer, use the methods from the
- * {@link ubc.cosc322.state.Move} class. The most relevant ones are:
- * 
- * <ul>
- * <li>{@link ubc.cosc322.state.Move#arrow} to get the position index of
- * the arrow being fired in this move,</li>
- * <li>{@link ubc.cosc322.state.Move#start} to get the starting position
- * of the queen that we want to move, and</li>
- * <li>{@link ubc.cosc322.state.Move#end} to get the position we want to
- * move the queen to.</li>
- * </ul>
- * 
- * <hr />
- * 
- * <h4>See Also</h4>
- * <ul>
- * <li>(Wikipedia) <em><a href=
- * "https://en.wikipedia.org/wiki/Iterative_deepening_depth-first_search">Iterative
- * deepening</a></em>.</li>
- * <li>Schaeffer, J. <em><a href=
- * "https://webdocs.cs.ualberta.ca/~jonathan/publications/ai_publications/pami.pdf">The
- * History Heuristic and Alpha-Beta Search Enhancements in
- * Practice</a></em>.</li>
- * </ul>
+ * Parallelization of alpha-beta search is not straightforward to implement, as
+ * the quality of the pruning largely depends on information gained
+ * sequentially (i.e., the alpha/beta cutoff scores). Additionally, this
+ * program isn't meant to be run on a high-powered machine with hundreds of
+ * cores. With these limitations in mind, I have chosen a straightforward 
+ * approach that should, in theory, perform better than sequential Alpha-
+ * Beta in all cases.
  */
-public class AlphaBeta
-		extends TimeConstrained
-		implements SearchMethod {
-
+public class ParallelAlphaBeta
+	extends TimeConstrained
+	implements SearchMethod {
 
 	// Configuration options.
 	/** The maximum depth to search to. */
 	private int maxDepth = 92;
 	/** The table of history scores. */
-	private HistoryTable history = new HistoryTable();
+	private AtomicHistoryTable history = new AtomicHistoryTable();
 	/** The initial board state. */
 	private State root;
 	/** The player who we want to win. */
@@ -91,7 +40,7 @@ public class AlphaBeta
 	/** Indicates whether or not we want to see output to the console. */
 	private boolean showOutput = false;
 
-	public AlphaBeta(
+	public ParallelAlphaBeta(
 		State initialState,
 		HeuristicMethod heuristic,
 		byte maximizingPlayer
@@ -118,7 +67,7 @@ public class AlphaBeta
 	}
 
 	public void resetHistory() {
-		this.history = new HistoryTable();
+		this.history = new AtomicHistoryTable();
 	}
 
 	public void setMaxDepth(int maxDepth) {
@@ -148,8 +97,7 @@ public class AlphaBeta
 					}
 				}
 			}
-		} catch (TimeoutException e) {
-		}
+		} catch (TimeoutException e) {}
 
 		return bestMove;
 	}
