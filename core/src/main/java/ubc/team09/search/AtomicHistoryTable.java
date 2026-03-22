@@ -15,7 +15,21 @@ public class AtomicHistoryTable {
 		new AtomicInteger[2][100][100][100];
 	private static final int MAX_HISTORY = 2 << 13;
 
-	public AtomicHistoryTable() {}
+	public AtomicHistoryTable() {
+		for (int player = 0; player < 2; player++) {
+			for (int start = 0; start < 100; start++) {
+				for (int end = 0; end < 100; end++) {
+					for (int arrow = 0; arrow < 100; arrow++) {
+						scores
+							[player]
+							[start]
+							[end]
+							[arrow] = new AtomicInteger(0);
+					}
+				}
+			}
+		}
+	}
 
 	public int score(int move) {
 		return scores

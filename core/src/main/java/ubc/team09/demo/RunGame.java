@@ -3,6 +3,7 @@ package ubc.team09.demo;
 import ubc.team09.eval.MinDist;
 import ubc.team09.player.Util;
 import ubc.team09.search.AlphaBeta;
+import ubc.team09.search.ParallelAlphaBeta;
 import ubc.team09.state.C;
 import ubc.team09.state.Move;
 import ubc.team09.state.State;
@@ -12,12 +13,12 @@ public class RunGame {
 	public static void main() {
 
 		State board = Util.initialBoard();
-		Display.printBoard(board, "Alpha-Beta vs Alpha-Beta");
+		Display.printBoard(board, "A-B vs Parallel A-B");
 
 		AlphaBeta edi = new AlphaBeta(board, new MinDist(), C.WHITE);
-		edi.setTimeLimit(10);
+		edi.setTimeLimit(30);
 		edi.setShowOutput(true);
-		AlphaBeta legion = new AlphaBeta(board, new MinDist(), C.BLACK);
+		ParallelAlphaBeta legion = new ParallelAlphaBeta(board, new MinDist(), C.BLACK);
 		legion.setTimeLimit(30);
 		legion.setShowOutput(true);
 
@@ -34,7 +35,7 @@ public class RunGame {
 				break;
 			}
 			board = new State(board, move);
-			Display.printBoard(board, "Alpha-Beta vs Itself");
+			Display.printBoard(board, "A-B vs Parallel A-B");
 		}
 
 		String winner = Move.player(board.move) == C.WHITE ? "White" : "Black";

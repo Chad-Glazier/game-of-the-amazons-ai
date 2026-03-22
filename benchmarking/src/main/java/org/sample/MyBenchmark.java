@@ -31,15 +31,28 @@
 
 package org.sample;
 
-import org.openjdk.jmh.annotations.Benchmark;
+import java.util.concurrent.TimeUnit;
 
-import ubc.team09.bitboard.BitBoard;
+import org.openjdk.jmh.annotations.*;
 
+import ubc.team09.eval.MinDist;
+import ubc.team09.player.Util;
+import ubc.team09.search.AlphaBeta;
+import ubc.team09.state.C;
+import ubc.team09.state.State;
+
+@BenchmarkMode(Mode.SingleShotTime)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class MyBenchmark {
 
 	@Benchmark
-	public void testMethod() {
-		BitBoard.create();
+	public void depth4WithoutMemory() {
+
 	}
 
+
+	@Benchmark
+	public void depth4WithMemory() {
+		
+	}
 }

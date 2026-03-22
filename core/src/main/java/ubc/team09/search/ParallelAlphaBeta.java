@@ -1,7 +1,10 @@
 package ubc.team09.search;
 
 import java.util.ArrayList;
+import java.util.concurrent.RecursiveAction;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import ubc.team09.eval.HeuristicMethod;
 import ubc.team09.state.C;
@@ -19,12 +22,14 @@ import ubc.team09.view.Display;
  * sequentially (i.e., the alpha/beta cutoff scores). Additionally, this
  * program isn't meant to be run on a high-powered machine with hundreds of
  * cores. With these limitations in mind, I have chosen a straightforward 
- * approach that should, in theory, perform better than sequential Alpha-
- * Beta in all cases.
+ * approach (the "Young Brothers Wait Concept")
  */
 public class ParallelAlphaBeta
 	extends TimeConstrained
 	implements SearchMethod {
+	
+	private final static int MIN_PARALLEL_DEPTH = 2;
+
 
 	// Configuration options.
 	/** The maximum depth to search to. */
@@ -83,17 +88,19 @@ public class ParallelAlphaBeta
 		int bestMove = 0;
 
 		try {
-			for (int depth = 1; depth < maxDepth; depth++) {
+			for (int depth = 1; depth <= maxDepth; depth++) {
 				int bestMoveAtDepth = depthLimitedSearch(depth);
 				if (bestMoveAtDepth == 0) {
 					break;
 				} else {
 					bestMove = bestMoveAtDepth;
 					if (showOutput) {
-						Display.printText(0,
-								"Searching at depth " +
-										Integer.toString(depth + 1) +
-										"...");
+						Display.printText(
+							0,
+							"Searching at depth " +
+							Integer.toString(depth + 1) +
+							"..."
+						);
 					}
 				}
 			}
@@ -137,8 +144,8 @@ public class ParallelAlphaBeta
 		// Find the best move.
 		//
 
-		double alpha = Double.NEGATIVE_INFINITY;
-		double beta = Double.POSITIVE_INFINITY;
+		int alpha = Integer.MIN_VALUE;
+		int beta = Integer.MAX_VALUE;
 
 		int color = this.player == C.WHITE ? +1 : -1;
 
@@ -146,8 +153,14 @@ public class ParallelAlphaBeta
 
 		for (State child : children) {
 
-			double score = -alphaBeta(
-					child, -beta, -alpha, depth - 1, -color);
+			int score = - alphaBeta(
+				child, 
+				- beta, 
+				- alpha, 
+				depth - 1, 
+				- color, 
+				new AtomicBoolean(false)
+			);
 
 			if (score > alpha) {
 				alpha = score;
@@ -164,17 +177,21 @@ public class ParallelAlphaBeta
 	 * @param alpha
 	 * @param beta
 	 * @param depth
-	 * @param color <code>-1</code> to find the ideal score for Black, and
-	 *              <code>+1</code> to find the ideal score for White.
+	 * @param color <code>-1</code> to find the ideal score for Black and
+	 * <code>+1</code> to find the ideal score for White.
 	 * @return
 	 * @throws TimeoutException
 	 */
-	private double alphaBeta(
-			State state,
-			double alpha,
-			double beta,
-			int depth,
-			int color) throws TimeoutException {
+	private int alphaBeta(
+		State state,
+		int alpha,
+		int beta,
+		int depth,
+		int color,
+		AtomicBoolean abort
+	) throws TimeoutException {
+
+		if (abort.get()) return alpha;
 
 		//
 		// Check the time limit; if time limit is expired, we throw an
@@ -191,6 +208,148 @@ public class ParallelAlphaBeta
 		if (depth == 0) {
 			return color * heuristic.evaluate(state);
 		}
+
+		//
+		// If the remaining depth is small, then we just do sequential search.
+		//
+
+		if (depth < MIN_PARALLEL_DEPTH) {
+			return alphaBetaSequential(state, alpha, beta, depth, color);
+		}
+
+		//
+		// Collect all the children.
+		//
+
+		ArrayList<State> children = new ArrayList<State>(1000);
+		StateGenerator iter = state.children();
+		for (State child = iter.next(); child != null; child = iter.next()) {
+			children.add(child);
+		}
+
+		//
+		// Check if the state is terminal.
+		//
+
+		if (children.isEmpty()) {
+			return color * heuristic.evaluate(state);
+		}
+
+		//
+		// Sort the children based on their history scores.
+		//
+
+		children.sort(history.descending);
+
+		// 
+		// Check the eldest sibling first.
+		//
+
+		State eldest = children.get(0);
+
+		int bestMove = eldest.move;
+		int bestScore = - alphaBeta(
+			eldest, - beta, - alpha, depth - 1, - color, abort
+		);
+
+		alpha = Math.max(bestScore, alpha);
+		if (alpha >= beta) {
+			history.increaseScore(bestMove, depth);
+			return alpha;
+		}
+
+		//
+		// Try the younger siblings.
+		//
+
+		AtomicInteger sharedAlpha = new AtomicInteger(alpha);
+
+		RecursiveAction[] tasks = new RecursiveAction[children.size() - 1];
+
+		for (int i = 1; i < children.size(); i++) {
+
+			State child = children.get(i);
+
+			tasks[i - 1] = new RecursiveAction() {
+				@Override
+				public void compute() {
+
+					if (abort.get()) {
+						return;
+					}
+
+					int score;
+					try {
+						score = - alphaBeta(
+							child, 
+							- beta, 
+							- sharedAlpha.get(), 
+							depth - 1, 
+							- color,
+							abort
+						);
+					} catch (TimeoutException e) {
+						abort.set(true);
+						return;
+					}
+
+					while (true) {
+						int currentAlpha = sharedAlpha.get();
+
+						if (score <= currentAlpha) {
+							break;
+						}
+
+						if (sharedAlpha.compareAndSet(currentAlpha, score)) {
+							break;
+						}
+					}
+
+					if (sharedAlpha.get() >= beta) {
+						abort.set(true);
+					}
+
+				}
+			};
+		}
+
+		//
+		// Execute the tasks.
+		//
+
+		for (RecursiveAction task : tasks) {
+			if (task != null) {
+				task.fork();
+			}
+		}
+
+		for (RecursiveAction task : tasks) {
+			task.join();
+		}
+
+		return sharedAlpha.get();
+	}
+
+	/**
+	 * 
+	 * @param state
+	 * @param alpha
+	 * @param beta
+	 * @param depth
+	 * @param color <code>-1</code> to find the ideal score for Black, and
+	 *              <code>+1</code> to find the ideal score for White.
+	 * @return
+	 * @throws TimeoutException
+	 */
+	private int alphaBetaSequential(
+		State state,
+		int alpha,
+		int beta,
+		int depth,
+		int color
+	) throws TimeoutException {
+
+		checkTimeOccasionally();
 
 		//
 		// Collect all the children.
@@ -221,11 +380,12 @@ public class ParallelAlphaBeta
 		//
 
 		int bestMove = 0;
-		double score = Double.NEGATIVE_INFINITY;
+		int score = Integer.MIN_VALUE;
 		for (State child : children) {
 
-			double result = -alphaBeta(
-					child, -beta, -alpha, depth - 1, -color);
+			int result = - alphaBetaSequential(
+				child, -beta, -alpha, depth - 1, -color
+			);
 			if (result > score) {
 				score = result;
 			}
@@ -238,7 +398,7 @@ public class ParallelAlphaBeta
 				break;
 			}
 
-			alpha = Math.max(alpha, score);
+			alpha = Integer.max(alpha, score);
 		}
 
 		//
