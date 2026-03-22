@@ -9,26 +9,25 @@ import ubc.team09.view.Display;
 
 import ygraph.ai.smartfox.games.GamePlayer;
 
-/**
- * 
- */
 public class Main {
 
 	public static void main(String[] args) throws Exception {
 
 		String username = Display.promptString(
-				"Enter the username to use for server communication.");
+			"Enter the username to use for server communication."
+		);
 
 		int timeLimit = Display.promptInt(
-				"Enter the time limit (in seconds).");
+			"Enter the time limit (in seconds)."
+		);
 
 		LinkedList<String> playerColors = new LinkedList<>();
 		playerColors.add("Black");
 		playerColors.add("White");
 
 		String startingColor = Display.prompt(
-				"Enter which color starts.",
-				playerColors);
+			"Enter which color starts.",
+			playerColors);
 		byte starting;
 		if (startingColor.equalsIgnoreCase("White")) {
 			starting = C.WHITE;
