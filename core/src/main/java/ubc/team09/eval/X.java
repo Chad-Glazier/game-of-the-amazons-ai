@@ -33,7 +33,7 @@ public class X implements HeuristicMethod {
 			for (byte[] whiteQueenDistance : whiteDistances) {
 
 				byte d = whiteQueenDistance[i];
-				if (d == QGraph.UNREACHABLE) {
+				if (d == QGraph.UNREACHABLE || d == 0) {
 					continue;
 				}
 
@@ -49,7 +49,7 @@ public class X implements HeuristicMethod {
 			for (byte[] blackQueenDistance : blackDistances) {
 
 				byte d = blackQueenDistance[i];
-				if (d == QGraph.UNREACHABLE) {
+				if (d == QGraph.UNREACHABLE || d == 0) {
 					continue;
 				}
 
