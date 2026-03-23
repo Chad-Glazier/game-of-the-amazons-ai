@@ -155,6 +155,10 @@ public class AlphaBeta
 			}
 		} catch (TimeoutException e) {}
 
+		if (bestChild == root) {
+			return 0; // terminal state.
+		}
+		
 		return bestChild.move;
 	}
 

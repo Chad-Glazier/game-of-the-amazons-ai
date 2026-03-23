@@ -1,5 +1,6 @@
 package ubc.team09.demo;
 
+import ubc.team09.eval.KMinDist;
 import ubc.team09.eval.MinDist;
 import ubc.team09.player.Util;
 import ubc.team09.search.AlphaBeta;
@@ -11,16 +12,16 @@ import ubc.team09.view.Display;
 public class RunGame {
 	public static void main() {
 
-		String title = "AB vs AB";
+		String title = "MinDist vs KMinDist";
 
 		State board = Util.initialBoard();
-		Display.printBoard(board, title, "Black", "White");
+		Display.printBoard(board, title, "KMinDist", "MinDist");
 
 		AlphaBeta edi = new AlphaBeta(board, new MinDist(), C.WHITE);
 		edi.setTimeLimit(30);
 		edi.setShowOutput(true);
 
-		AlphaBeta legion = new AlphaBeta(board, new MinDist(), C.BLACK);
+		AlphaBeta legion = new AlphaBeta(board, new KMinDist(), C.BLACK);
 		legion.setTimeLimit(30);
 		legion.setShowOutput(true);
 
@@ -44,7 +45,7 @@ public class RunGame {
 			board = new State(board, move);
 			Display.printBoard(
 				board, title, 
-				"X", "mindist"
+				"KMinDist", "MinDist"
 			);
 		}
 
