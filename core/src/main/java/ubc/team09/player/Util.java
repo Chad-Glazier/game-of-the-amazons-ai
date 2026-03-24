@@ -5,8 +5,8 @@ import java.util.HashSet;
 import java.util.Map;
 
 import ubc.team09.bitboard.BitBoard;
+import ubc.team09.state.BoardState;
 import ubc.team09.state.C;
-import ubc.team09.state.MinimalState;
 import ubc.team09.state.Move;
 import ubc.team09.state.State;
 import ygraph.ai.smartfox.games.amazons.AmazonsGameMessage;
@@ -40,7 +40,7 @@ public class Util {
 			occupancy,
 			queensArr,
 			C.WHITE,
-			0
+			Move.NULL_MOVE
 		);
 	}
 
@@ -73,7 +73,7 @@ public class Util {
 			occupancy,
 			queens,
 			C.WHITE,
-			0
+			Move.NULL_MOVE
 		);
 	}
 
@@ -89,7 +89,7 @@ public class Util {
 	 * it is missing a queen), then this will return <code>null</code>.
 	 */
 	@SuppressWarnings("unchecked")
-	public static MinimalState parseState(Map<String, Object> messageDetails) {
+	public static BoardState parseState(Map<String, Object> messageDetails) {
 		ArrayList<Integer> board = (ArrayList<Integer>) messageDetails.get(AmazonsGameMessage.GAME_STATE);
 
 		long[] occupancy = BitBoard.create();
@@ -102,21 +102,21 @@ public class Util {
 			for (int j = 1; j < 11; j++) {
 				byte position = (byte) (10 * (i - 1) + j - 1);
 				switch (board.get(i * 11 + j)) {
-				case 0:
-					continue;
-				case 1:
-					queens[blackIdx++] = position;
-					BitBoard.flag(occupancy, position);
-					break;
-				case 2:
-					queens[whiteIdx++] = position;
-					BitBoard.flag(occupancy, position);
-					break;
-				case 3:
-					BitBoard.flag(occupancy, position);
-					break;
-				default:
-					return null;
+					case 0:
+						continue;
+					case 1:
+						queens[blackIdx++] = position;
+						BitBoard.flag(occupancy, position);
+						break;
+					case 2:
+						queens[whiteIdx++] = position;
+						BitBoard.flag(occupancy, position);
+						break;
+					case 3:
+						BitBoard.flag(occupancy, position);
+						break;
+					default:
+						return null;
 				}
 			}
 		}
@@ -125,7 +125,7 @@ public class Util {
 			return null;
 		}
 
-		return new MinimalState(occupancy, queens);
+		return new BoardState(occupancy, queens);
 	}
 
 	/**
@@ -140,7 +140,7 @@ public class Util {
 	 */
 	@SuppressWarnings("unchecked")
 	public static int parseMove(
-			MinimalState state, Map<String, Object> details) {
+			BoardState state, Map<String, Object> details) {
 		ArrayList<Integer> fromCoords = (ArrayList<Integer>) details.get(AmazonsGameMessage.QUEEN_POS_CURR);
 		ArrayList<Integer> toCoords = (ArrayList<Integer>) details.get(AmazonsGameMessage.QUEEN_POS_NEXT);
 		ArrayList<Integer> arrowCoords = (ArrayList<Integer>) details.get(AmazonsGameMessage.ARROW_POS);

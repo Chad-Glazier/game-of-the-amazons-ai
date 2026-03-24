@@ -6,26 +6,22 @@ import ubc.team09.eval.QMinDist;
 import ubc.team09.search.AlphaBeta;
 import ubc.team09.state.State;
 
+/**
+ * The flagship VI for this project. EDI uses a lightweight, single-threaded
+ * implementation of alpha-beta search with heavily optimized operations.
+ */
 public class EDI implements VI {
 	/** The turn at which the algorithm shifts from kmindist to qmindist. */
 	private final static int INFLECTION_POINT = 55;
 
-	private final AlphaBeta ab;
+	private final AlphaBeta ab = new AlphaBeta();
 	private final KMinDist kmindist = new KMinDist();
 	private final QMinDist qmindist = new QMinDist();
 
-	public EDI(
-		State state,
-		byte color,
-		int timeLimit
-	) {
-		ab = new AlphaBeta(state, kmindist, color);
-		ab.setTimeLimit(timeLimit);
+	public EDI() {
 		ab.setShowOutput(true);
-		ab.setMaxDepth(93 - BitBoard.count(state.occupancy));
 	}
 
-	@Override
 	public int consult(State state) {
 
 		ab.setBoard(state);
@@ -38,5 +34,15 @@ public class EDI implements VI {
 		}
 
 		return ab.search();
+	}
+
+	public EDI setColor(byte color) {
+		ab.setColor(color);
+		return this;
+	}
+
+	public EDI setTimeLimit(int seconds) {
+		ab.setTimeLimit(seconds);
+		return this;
 	}
 }

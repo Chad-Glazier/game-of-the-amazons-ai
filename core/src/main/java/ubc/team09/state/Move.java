@@ -44,6 +44,9 @@ public class Move {
 	private static final int ARROW_MASK = 0x00ff0000;
 	private static final int PLAYER_MASK = 0xff000000;
 
+	/** Represents a null move. */
+	public static final int NULL_MOVE = 0;
+
 	/**
 	 * Encodes a move as an integer.
 	 * 
@@ -133,7 +136,7 @@ public class Move {
 	 * Returns <code>true</code> if and only if a move is legal from a given
 	 * board state.
 	 */
-	public static boolean isLegal(MinimalState board, int move) {
+	public static boolean isLegal(BoardState board, int move) {
 
 		long[] neighbors = QGraph.neighbors(start(move), board.occupancy);
 

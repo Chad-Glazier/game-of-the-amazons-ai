@@ -31,7 +31,8 @@ public class State {
 	public final int move;
 
 	public State(
-			long[] occupancy, byte[] queens, byte activePlayer, int move) {
+		long[] occupancy, byte[] queens, byte activePlayer, int move
+	) {
 		this.activePlayer = activePlayer;
 		this.occupancy[0] = occupancy[0];
 		this.occupancy[1] = occupancy[1];
@@ -84,17 +85,18 @@ public class State {
 	 */
 	public State copy() {
 		return new State(
-				BitBoard.copy(occupancy),
-				Arrays.copyOf(queens, 8),
-				activePlayer,
-				move);
+			BitBoard.copy(occupancy),
+			Arrays.copyOf(queens, 8),
+			activePlayer,
+			move
+		);
 	}
 
 	/**
 	 * Updates this board's occupancy and queen positions to match the given
 	 * state.
 	 */
-	public void impose(MinimalState newState) {
+	public void impose(BoardState newState) {
 		occupancy[0] = newState.occupancy[0];
 		occupancy[1] = newState.occupancy[1];
 		queens[0] = newState.queens[0];

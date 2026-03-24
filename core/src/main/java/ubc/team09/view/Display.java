@@ -8,6 +8,7 @@ import java.util.Scanner;
 import ubc.team09.bitboard.BitBoard;
 import ubc.team09.eval.HeuristicMethod;
 import ubc.team09.eval.QMinDist;
+import ubc.team09.state.BoardState;
 import ubc.team09.state.C;
 import ubc.team09.state.Move;
 import ubc.team09.state.State;
@@ -153,10 +154,41 @@ public class Display {
 	}
 
 	/**
+	 * Prints a board state to the console. 
+	 * 
+	 * @param state
+	 * @param label
+	 * @param blackName
+	 * @param whiteName
+	 */
+	public static void printGameBoard(
+		BoardState state,
+		int lastMove,
+		String label, 
+		String blackName, 
+		String whiteName,
+		LinkedList<String> messages
+	) {
+		byte activePlayer = Move.player(lastMove) == C.WHITE ?
+			C.BLACK : C.WHITE;
+
+		State fullState = new State(
+			state.occupancy,
+			state.queens,
+			activePlayer,
+			lastMove
+		);
+
+		printBoard(fullState, label, blackName, whiteName);
+		printSystemMessages(messages);
+	}
+
+	/**
 	 * Prints a board state to the console.
 	 */
 	public static void printBoard(
-			State state, String label, String blackName, String whiteName) {
+		State state, String label, String blackName, String whiteName
+	) {
 		// We can get the turn count by getting the number of flags in the
 		// occupancy board and subtracting 8, for the queens (this gives us
 		// the number of arrows).
@@ -355,6 +387,10 @@ public class Display {
 	}
 
 	private static String moveToString(int move) {
+		if (move == Move.NULL_MOVE) {
+			return "";
+		}
+
 		String out = "";
 
 		int fromRow = Move.start(move) / 10;
@@ -387,6 +423,10 @@ public class Display {
 	}
 
 	private static String arrowToString(int move) {
+		if (move == Move.NULL_MOVE) {
+			return "";
+		}
+
 		String out = "";
 
 		int arrowRow = Move.arrow(move) / 10;

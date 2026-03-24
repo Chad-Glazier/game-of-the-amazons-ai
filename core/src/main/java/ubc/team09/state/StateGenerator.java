@@ -73,14 +73,16 @@ public class StateGenerator {
 		}
 
 		State child = new State(
-				BitBoard.flagCopy(occupancy, arrow),
-				Arrays.copyOf(parent.queens, 8),
-				parent.activePlayer == WHITE ? BLACK : WHITE,
-				Move.encode(
-						parent.queens[queenIdx],
-						destination,
-						arrow,
-						parent.activePlayer));
+			BitBoard.flagCopy(occupancy, arrow),
+			Arrays.copyOf(parent.queens, 8),
+			parent.activePlayer == WHITE ? BLACK : WHITE,
+			Move.encode(
+				parent.queens[queenIdx],
+				destination,
+				arrow,
+				parent.activePlayer
+			)
+		);
 		child.queens[queenIdx] = destination;
 
 		return child;
