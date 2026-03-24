@@ -39,6 +39,7 @@ import org.openjdk.jmh.annotations.Measurement;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.annotations.Warmup;
+import org.openjdk.jmh.infra.Blackhole;
 
 import ubc.team09.eval.HeuristicMethod;
 import ubc.team09.eval.KMinDist;
@@ -60,32 +61,32 @@ public class HeuristicEvaluations {
 	private static final HeuristicMethod kmindist = new KMinDist();
 
 	@Benchmark
-	public void QMinDistInitial() {
-		qmindist.evaluate(initial);
+	public void QMinDistInitial(Blackhole bh) {
+		bh.consume(qmindist.evaluate(initial));
 	}
 
 	@Benchmark
-	public void QMinDistSparse() {
-		qmindist.evaluate(sparse);
+	public void QMinDistSparse(Blackhole bh) {
+		bh.consume(qmindist.evaluate(sparse));
 	}
 
 	@Benchmark
-	public void QMinDistDense() {
-		qmindist.evaluate(dense);
+	public void QMinDistDense(Blackhole bh) {
+		bh.consume(qmindist.evaluate(dense));
 	}
 
 	@Benchmark
-	public void KMinDistInitial() {
-		kmindist.evaluate(initial);
+	public void KMinDistInitial(Blackhole bh) {
+		bh.consume(kmindist.evaluate(initial));
 	}
 
 	@Benchmark
-	public void KMinDistSparse() {
-		kmindist.evaluate(sparse);
+	public void KMinDistSparse(Blackhole bh) {
+		bh.consume(kmindist.evaluate(sparse));
 	}
 
 	@Benchmark
-	public void KMinDistDense() {
-		kmindist.evaluate(dense);
+	public void KMinDistDense(Blackhole bh) {
+		bh.consume(kmindist.evaluate(dense));
 	}
 }

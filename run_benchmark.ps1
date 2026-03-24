@@ -7,3 +7,5 @@ mvn verify -pl benchmarking -DskipTests;
 
 # Run the benchmarks jar.
 java -jar ".\benchmarking\target\benchmarks.jar";
+
+
