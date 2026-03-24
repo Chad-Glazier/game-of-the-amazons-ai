@@ -2,7 +2,7 @@ package ubc.team09.state;
 
 import ubc.team09.bitboard.BitBoard;
 
-public class MinimalState {
+public class BoardState {
 	/**
 	 * An occupancy board; i.e., a bitboard that has a flag wherever there is
 	 * a queen or an arrow. If a position is not flagged on this board, then
@@ -23,7 +23,7 @@ public class MinimalState {
 	 * @param occupancy
 	 * @param queens
 	 */
-	public MinimalState(long[] occupancy, byte[] queens) {
+	public BoardState(long[] occupancy, byte[] queens) {
 		this.occupancy = occupancy;
 		this.queens = queens;
 	}
@@ -31,7 +31,7 @@ public class MinimalState {
 	/**
 	 * Creates a new state by applying the given move to an old state.
 	 */
-	public MinimalState(MinimalState prev, int move) {
+	public BoardState(BoardState prev, int move) {
 		this.occupancy = new long[2];
 		this.queens = new byte[8];
 
@@ -108,7 +108,7 @@ public class MinimalState {
 	 * 
 	 * @param state The state to consider.
 	 */
-	public boolean isConsistentWith(MinimalState state) {
+	public boolean equals(BoardState state) {
 
 		if (this.occupancy[0] != state.occupancy[0]
 				|| this.occupancy[1] != state.occupancy[1]) {
@@ -159,7 +159,7 @@ public class MinimalState {
 		return true;
 	}
 
-	public static MinimalState initial() {
+	public static BoardState initial() {
 
 		byte[] queens = new byte[8];
 
@@ -181,6 +181,6 @@ public class MinimalState {
 			BitBoard.flag(occupancy, queen);
 		}
 
-		return new MinimalState(occupancy, queens);
+		return new BoardState(occupancy, queens);
 	}
 }

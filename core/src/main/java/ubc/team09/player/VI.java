@@ -19,10 +19,25 @@ public interface VI {
 	/**
 	 * Returns the VI's recommended move.
 	 * 
-	 * @see {@link ubc.cosc322.state.Move} to use the move value.
+	 * @see {@link ubc.team09.state.Move} to use the move value.
 	 * 
 	 * @param board The current board state.
 	 * @return An integer encoding of the move.
 	 */
 	public int consult(State board);
+
+	/**
+	 * Tells the VI which color they should make decisions for; i.e., which
+	 * player they should try to maximize the score for.
+	 * 
+	 * @see {@link ubc.team09.state.C}
+	 * 
+	 * @param color <code>0</code> for White, <code>1</code> for black.
+	 */
+	public VI setColor(byte color);
+
+	/**
+	 * Imposes a time limit for each turn that the VI takes.
+	 */
+	public VI setTimeLimit(int seconds);
 }

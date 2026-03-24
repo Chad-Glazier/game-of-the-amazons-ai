@@ -73,14 +73,14 @@ import ubc.team09.view.Display;
  * </ul>
  */
 public class AlphaBeta
-		extends TimeConstrained
-		implements SearchMethod {
+	extends TimeConstrained
+	implements SearchMethod {
 
 	// Configuration options.
 	/** The maximum depth to search to. */
 	private int maxDepth = 92;
 	/** The table of history scores. */
-	private HistoryTable history = new HistoryTable();
+	private final HistoryTable history = new HistoryTable();
 	/** The initial board state. */
 	private State root;
 	/** The player who we want to win. */
@@ -100,6 +100,8 @@ public class AlphaBeta
 		this.heuristic = heuristic;
 	}
 
+	public AlphaBeta() {}
+
 	//
 	// Methods for setting configurations.
 	//
@@ -116,10 +118,6 @@ public class AlphaBeta
 		this.root = state.copy();
 	}
 
-	public HistoryTable history() {
-		return this.history;
-	}
-
 	public void setColor(byte color) {
 		this.player = color;
 	}
@@ -129,7 +127,7 @@ public class AlphaBeta
 	}
 
 	//
-	// The actual search method.
+	// The search algorithm.
 	//
 
 	public int search() {
@@ -166,35 +164,28 @@ public class AlphaBeta
 		return bestChild.move;
 	}
 
+	/**
+	 * Conducts a depth-limited search from the root, returning the state with
+	 * the best minimax score.
+	 * 
+	 * @throws TimeoutException when the time limit runs out and the search
+	 * must be terminated.
+	 */
 	private State depthLimitedSearch(int depth) throws TimeoutException {
 
-		//
-		// Note: The heuristic evaluation will return lesser values if a state
-		// favors Black, and greater values if a state favors White.
-		//
-
-		//
 		// Collect all the children.
-		//
-
 		ArrayList<State> children = new ArrayList<State>(400);
 		StateGenerator iter = root.children();
 		for (State child = iter.next(); child != null; child = iter.next()) {
 			children.add(child);
 		}
 
-		//
 		// Check if the state is terminal.
-		//
-
 		if (children.isEmpty()) {
 			return null;
 		}
 
-		//
 		// Order the children based on their history scores.
-		//
-
 		children.sort(history.descending);
 
 		//
@@ -210,7 +201,7 @@ public class AlphaBeta
 
 		for (State child : children) {
 
-			double score = - alphaBeta(
+			double score = -alphaBeta(
 				child, -beta, -alpha, depth - 1, -color
 			);
 
@@ -224,14 +215,10 @@ public class AlphaBeta
 	}
 
 	/**
-	 * 
-	 * @param state
-	 * @param alpha
-	 * @param beta
-	 * @param depth
-	 * @param color <code>-1</code> to find the ideal score for Black, and
-	 *              <code>+1</code> to find the ideal score for White.
-	 * @return
+	 * Conducts a recursive search to find the minimax score of a node.
+	 * <br /><br />
+	 * This method uses the negamax implementation of alpha-beta.
+	 *
 	 * @throws TimeoutException
 	 */
 	private double alphaBeta(
@@ -242,50 +229,32 @@ public class AlphaBeta
 		int color
 	) throws TimeoutException {
 
-		//
 		// Check the time limit; if time limit is expired, we throw an
 		// exception. To save sytem calls, this function only actually checks
 		// the time once every ~1000 invocations.
-		//
-
 		checkTimeOccasionally();
 
-		//
 		// Check if we are maximum depth.
-		//
-
 		if (depth == 0) {
 			return color * heuristic.evaluate(state);
 		}
 
-		//
 		// Collect all the children.
-		//
-
 		ArrayList<State> children = new ArrayList<State>(400);
 		StateGenerator iter = state.children();
 		for (State child = iter.next(); child != null; child = iter.next()) {
 			children.add(child);
 		}
 
-		//
 		// Check if the state is terminal.
-		//
-
 		if (children.isEmpty()) {
 			return color * heuristic.evaluate(state);
 		}
 
-		//
 		// Sort the children based on their history scores.
-		//
-
 		children.sort(history.descending);
 
-		//
 		// Find the best score using the negamax implementation of alpha-beta.
-		//
-
 		int bestMove = 0;
 		double score = Double.NEGATIVE_INFINITY;
 		for (State child : children) {
@@ -307,10 +276,6 @@ public class AlphaBeta
 
 			alpha = Math.max(alpha, score);
 		}
-
-		//
-		// Return the score.
-		//
 
 		return score;
 	}
