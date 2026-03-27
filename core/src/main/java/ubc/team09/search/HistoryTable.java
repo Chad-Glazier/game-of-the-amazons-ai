@@ -14,7 +14,7 @@ import ubc.team09.state.State;
  * more effective than ordering by evaluation scores.
  * 
  * <hr />
- * <h4>See Also</h4>
+ * <strong>See Also</strong>
  * <ul>
  * 	<li>Schaeffer, J. <em><a href=
  * 	"https://webdocs.cs.ualberta.ca/~jonathan/publications/ai_publications/pami.pdf">The

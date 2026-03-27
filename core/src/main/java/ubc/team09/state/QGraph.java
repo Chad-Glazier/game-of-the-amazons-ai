@@ -12,7 +12,7 @@ import ubc.team09.bitboard.P;
  * <br />
  * The queen-move definition of edges is the reason for the "Q" in the name.
  * 
- * @see {@link KGraph}
+ * See {@link KGraph KGraph}
  */
 public class QGraph {
 	public static final byte UNREACHABLE = 100;

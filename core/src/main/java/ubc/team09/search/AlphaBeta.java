@@ -10,7 +10,7 @@ import ubc.team09.state.StateGenerator;
 import ubc.team09.view.Display;
 
 /**
- * <h3>Alpha-Beta Search</h3>
+ * <H1>Alpha-Beta Search</H1>
  * 
  * This function implements minimax search with α-β pruning, iterative
  * deepening, and the History heuristic (a generalization of the Killer
@@ -22,10 +22,10 @@ import ubc.team09.view.Display;
  * As this algorithm uses iterative deepening, it will continue running until
  * its time limit runs out to find the best result. To set a specific time
  * limit, run
- * {@link #setTimeLimit()} or
- * {@link #setTimeLimitMs()}.
+ * {@link TimeConstrained#setTimeLimit setTimeLimit} or
+ * {@link TimeConstrained#setTimeLimitMs setTimeLimitMs}.
  * 
- * <h4>Example</h4>
+ * <h2>Example</h2>
  * 
  * Assume that <code>board</code> and <code>heuristic</code> are already
  * defined.
@@ -44,24 +44,24 @@ import ubc.team09.view.Display;
  * will be preserved between <code>search</code> calls. The only thing you
  * need to remember to update is the board state.
  * 
- * <h4>Remarks</h4>
+ * <h2>Remarks</h2>
  * 
  * The <code>move</code> output of a search function is an encoded integer. To
  * get details about the move from this integer, use the methods from the
- * {@link ubc.cosc322.state.Move} class. The most relevant ones are:
+ * {@link ubc.team09.state.Move} class. The most relevant ones are:
  * 
  * <ul>
- * <li>{@link ubc.cosc322.state.Move#arrow} to get the position index of
+ * <li>{@link ubc.team09.state.Move#arrow} to get the position index of
  * the arrow being fired in this move,</li>
- * <li>{@link ubc.cosc322.state.Move#start} to get the starting position
+ * <li>{@link ubc.team09.state.Move#start} to get the starting position
  * of the queen that we want to move, and</li>
- * <li>{@link ubc.cosc322.state.Move#end} to get the position we want to
+ * <li>{@link ubc.team09.state.Move#end} to get the position we want to
  * move the queen to.</li>
  * </ul>
  * 
  * <hr />
  * 
- * <h4>See Also</h4>
+ * <h2>See Also</h2>
  * <ul>
  * <li>(Wikipedia) <em><a href=
  * "https://en.wikipedia.org/wiki/Iterative_deepening_depth-first_search">Iterative
@@ -73,8 +73,8 @@ import ubc.team09.view.Display;
  * </ul>
  */
 public class AlphaBeta
-	extends TimeConstrained
-	implements SearchMethod {
+		extends TimeConstrained
+		implements SearchMethod {
 
 	// Configuration options.
 	/** The maximum depth to search to. */
@@ -91,16 +91,16 @@ public class AlphaBeta
 	private boolean showOutput = false;
 
 	public AlphaBeta(
-		State initialState,
-		HeuristicMethod heuristic,
-		byte maximizingPlayer
-	) {
+			State initialState,
+			HeuristicMethod heuristic,
+			byte maximizingPlayer) {
 		this.root = initialState.copy();
 		this.player = maximizingPlayer;
 		this.heuristic = heuristic;
 	}
 
-	public AlphaBeta() {}
+	public AlphaBeta() {
+	}
 
 	//
 	// Methods for setting configurations.
@@ -140,27 +140,27 @@ public class AlphaBeta
 			for (int depth = 1; depth <= maxDepth; depth++) {
 
 				State bestChildAtDepth = depthLimitedSearch(depth);
-				
+
 				if (bestChildAtDepth == null) {
 					break;
 				} else {
 					bestChild = bestChildAtDepth;
 					if (showOutput) {
 						Display.printText(
-							0,
-							"Searching at depth " +
-							Integer.toString(depth + 1) +
-							"..."
-						);
+								0,
+								"Searching at depth " +
+										Integer.toString(depth + 1) +
+										"...");
 					}
 				}
 			}
-		} catch (TimeoutException e) {}
+		} catch (TimeoutException e) {
+		}
 
 		if (bestChild == root) {
 			return 0; // terminal state.
 		}
-		
+
 		return bestChild.move;
 	}
 
@@ -169,7 +169,7 @@ public class AlphaBeta
 	 * the best minimax score.
 	 * 
 	 * @throws TimeoutException when the time limit runs out and the search
-	 * must be terminated.
+	 *                          must be terminated.
 	 */
 	private State depthLimitedSearch(int depth) throws TimeoutException {
 
@@ -202,8 +202,7 @@ public class AlphaBeta
 		for (State child : children) {
 
 			double score = -alphaBeta(
-				child, -beta, -alpha, depth - 1, -color
-			);
+					child, -beta, -alpha, depth - 1, -color);
 
 			if (score > alpha) {
 				alpha = score;
@@ -211,23 +210,23 @@ public class AlphaBeta
 			}
 		}
 
-		return bestChild;		
+		return bestChild;
 	}
 
 	/**
 	 * Conducts a recursive search to find the minimax score of a node.
-	 * <br /><br />
+	 * <br />
+	 * <br />
 	 * This method uses the negamax implementation of alpha-beta.
 	 *
 	 * @throws TimeoutException
 	 */
 	private double alphaBeta(
-		State state,
-		double alpha,
-		double beta,
-		int depth,
-		int color
-	) throws TimeoutException {
+			State state,
+			double alpha,
+			double beta,
+			int depth,
+			int color) throws TimeoutException {
 
 		// Check the time limit; if time limit is expired, we throw an
 		// exception. To save sytem calls, this function only actually checks
@@ -259,9 +258,8 @@ public class AlphaBeta
 		double score = Double.NEGATIVE_INFINITY;
 		for (State child : children) {
 
-			double result = - alphaBeta(
-				child, -beta, -alpha, depth - 1, -color
-			);
+			double result = -alphaBeta(
+					child, -beta, -alpha, depth - 1, -color);
 			if (result > score) {
 				score = result;
 			}

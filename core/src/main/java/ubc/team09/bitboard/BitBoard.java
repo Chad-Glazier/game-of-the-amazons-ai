@@ -99,7 +99,7 @@ public class BitBoard {
 	 * @param bitboard The original bitboard. This will be unchanged.
 	 * @param src      The position index to remove the bit from.
 	 * @param dst      The position index to move the bit to.
-	 * @returns A copy of the original bitboard with the move applied.
+	 * @return A copy of the original bitboard with the move applied.
 	 */
 	public static long[] moveCopy(long[] bitboard, byte src, byte dst) {
 		long lo = bitboard[0];

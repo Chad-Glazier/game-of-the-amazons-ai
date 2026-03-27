@@ -13,13 +13,13 @@ import ubc.team09.state.State;
  * <a href="https://masseffect.fandom.com/wiki/Virtual_Intelligence">a
  * videogame</a>)
  * purely because when you google "AI," the first thing that comes up is OpenAI
- * and that makes me cringe.
+ * and that rubs me the wrong way.
  */
 public interface VI {
 	/**
 	 * Returns the VI's recommended move.
 	 * 
-	 * @see {@link ubc.team09.state.Move} to use the move value.
+	 * See {@link ubc.team09.state.Move Move} to use the move value.
 	 * 
 	 * @param board The current board state.
 	 * @return An integer encoding of the move.
@@ -30,7 +30,7 @@ public interface VI {
 	 * Tells the VI which color they should make decisions for; i.e., which
 	 * player they should try to maximize the score for.
 	 * 
-	 * @see {@link ubc.team09.state.C}
+	 * See {@link ubc.team09.state.C C}
 	 * 
 	 * @param color <code>0</code> for White, <code>1</code> for black.
 	 */

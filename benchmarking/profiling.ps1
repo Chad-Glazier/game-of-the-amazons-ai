@@ -2,7 +2,11 @@ mvn clean install;
 
 # Run the stack profiler.
 java -jar .\target\benchmarks.jar `
-	SearchProfiling.AB `
+	ProfilingDeepSearch.* `
+	-prof stack;
+
+java -jar .\target\benchmarks.jar `
+	ProfilingShallowSearch.* `
 	-prof stack;
 
 # # Run the GC profiler

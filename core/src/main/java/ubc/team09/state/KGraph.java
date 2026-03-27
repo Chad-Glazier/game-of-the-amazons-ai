@@ -12,7 +12,7 @@ import ubc.team09.bitboard.P;
  * <br />
  * The king-move definition of edges is the reason for the "K" in the name.
  * 
- * @see {@link QGraph}
+ * See {@link QGraph QGraph}
  */
 public class KGraph {
 	public static long[] neighbors(byte position, long[] occupancy) {

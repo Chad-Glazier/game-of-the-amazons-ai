@@ -2,6 +2,10 @@ package ubc.team09.eval;
 
 import ubc.team09.state.State;
 
+/**
+ * This defines the interface that describes a heuristic method for evaluating
+ * a board state.
+ */
 public interface HeuristicMethod {
 	/**
 	 * Returns a number in the range of (-∞, +∞) where lower values indicate

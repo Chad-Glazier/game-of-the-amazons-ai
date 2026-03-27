@@ -8,7 +8,7 @@ import ubc.team09.state.State;
  * 
  * <hr />
  * 
- * <h4>See Also</h4>
+ * <strong>See Also</strong>
  * <ul>
  * 	<li>R. Zhong and K. Zhou, <a href="https://ieeexplore.ieee.org/abstract/document/7064199">An Optimization for Amazons Search and Evaluation,</a> 2014 </li>
  * </ul>

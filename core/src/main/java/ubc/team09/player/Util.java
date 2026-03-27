@@ -11,6 +11,10 @@ import ubc.team09.state.Move;
 import ubc.team09.state.State;
 import ygraph.ai.smartfox.games.amazons.AmazonsGameMessage;
 
+/**
+ * A class that contains a set of general utility functions used for
+ * communicating with the game server.
+ */
 public class Util {
 
 	/**

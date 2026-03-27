@@ -26,13 +26,12 @@ public class State {
 	/**
 	 * The move that created this board state.
 	 * 
-	 * @see {@link ubc.cosc322.state.Move}
+	 * See {@link ubc.team09.state.Move Move}
 	 */
 	public final int move;
 
 	public State(
-		long[] occupancy, byte[] queens, byte activePlayer, int move
-	) {
+			long[] occupancy, byte[] queens, byte activePlayer, int move) {
 		this.activePlayer = activePlayer;
 		this.occupancy[0] = occupancy[0];
 		this.occupancy[1] = occupancy[1];
@@ -85,11 +84,10 @@ public class State {
 	 */
 	public State copy() {
 		return new State(
-			BitBoard.copy(occupancy),
-			Arrays.copyOf(queens, 8),
-			activePlayer,
-			move
-		);
+				BitBoard.copy(occupancy),
+				Arrays.copyOf(queens, 8),
+				activePlayer,
+				move);
 	}
 
 	/**
