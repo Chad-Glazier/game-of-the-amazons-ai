@@ -1,5 +1,7 @@
 /**
- * This package contains the classes and methods used for handling the game
+ * <h1>Game State Representation</h1>
+ * 
+ * This package contains the classes and methods used for representing the game
  * state and generating child states. The more relevant classes are listed
  * below.
  * 

@@ -5,7 +5,7 @@ import java.util.Arrays;
 import ubc.team09.bitboard.BitBoard;
 
 /**
- * Represents a board state using bitboards.
+ * Represents a complete game state.
  */
 public class State {
 	/**
@@ -30,8 +30,22 @@ public class State {
 	 */
 	public final int move;
 
+	/**
+	 * Creates a new game state.
+	 * 
+	 * @param occupancy A bitboard with each occupied square (i.e., any square
+	 * with an arrow or a queen) flagged.
+	 * @param queens The position indices (0-99) of the eight queens on the
+	 * board. It must be maintained that the first four queens are White's
+	 * queens, and the latter four are Black's.
+	 * @param activePlayer The player whose turn it is in this state; i.e.,
+	 * who will make the next move. Use {@link C#WHITE} or {@link C#BLACK}.
+	 * @param move The integer representation of the most recent move. See
+	 * {@link Move}.
+	 */
 	public State(
-			long[] occupancy, byte[] queens, byte activePlayer, int move) {
+		long[] occupancy, byte[] queens, byte activePlayer, int move
+	) {
 		this.activePlayer = activePlayer;
 		this.occupancy[0] = occupancy[0];
 		this.occupancy[1] = occupancy[1];
@@ -46,6 +60,13 @@ public class State {
 		this.move = move;
 	}
 
+	/**
+	 * Creates a new board state by applying a move to an existing one.
+	 * 
+	 * @param prev The previous board state. This will not be mutated.
+	 * @param move The move to apply to get the new board state. See
+	 * {@link Move}.
+	 */
 	public State(State prev, int move) {
 		activePlayer = prev.activePlayer == C.WHITE ? C.BLACK : C.WHITE;
 		occupancy[0] = prev.occupancy[0];
@@ -73,7 +94,7 @@ public class State {
 	}
 
 	/**
-	 * Returns a generator which yields all possible subsequent states.
+	 * Returns a generator which yields all possible child states.
 	 */
 	public StateGenerator children() {
 		return new StateGenerator(this);
@@ -92,7 +113,7 @@ public class State {
 
 	/**
 	 * Updates this board's occupancy and queen positions to match the given
-	 * state.
+	 * board.
 	 */
 	public void impose(BoardState newState) {
 		occupancy[0] = newState.occupancy[0];

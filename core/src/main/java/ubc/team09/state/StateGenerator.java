@@ -4,6 +4,23 @@ import java.util.Arrays;
 
 import ubc.team09.bitboard.BitBoard;
 
+/**
+ * This class is used to iterate over child states, generating them on demand.
+ * E.g.,
+ * <pre>{@code
+ * StateGenerator iter = new StateGenerator(state);
+ * for (
+ * 	State child = iter.next();
+ * 	child != null;
+ * 	child = iter.next()
+ * ) {
+ * 	// Do something with the `child` state... 
+ * }
+ * }</pre>
+ * 
+ * Rather than using the constructor, you can also get a state generator via
+ * the {@link State#children()} method.
+ */
 public class StateGenerator {
 	private final static byte WHITE = 0;
 	private final static byte BLACK = 1;
@@ -16,6 +33,11 @@ public class StateGenerator {
 	private final long[] occupancy;
 	private byte destination = -1;
 
+	/**
+	 * Creates a new generator to iterate over the children of a given game 
+	 * state. Typically you should use {@link State#children()} instead of 
+	 * calling this constructor directly.
+	 */
 	public StateGenerator(State parent) {
 		this.parent = parent;
 		queenIdx = parent.activePlayer * 4;
@@ -35,6 +57,10 @@ public class StateGenerator {
 		}
 	}
 
+	/**
+	 * Yields the next child state. If all child states have been exhausted,
+	 * then this will return <code>null</code>.
+	 */
 	public State next() {
 		// TODO: Optimize by replacing `poll`. Right now, `poll` will scan
 		// both `long`s in a bitboard if needed, which leads to unnecessary

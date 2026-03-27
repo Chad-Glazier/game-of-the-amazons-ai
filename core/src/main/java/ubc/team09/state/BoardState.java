@@ -2,6 +2,11 @@ package ubc.team09.state;
 
 import ubc.team09.bitboard.BitBoard;
 
+/**
+ * Represents a board state. Unlike a full game state (see {@link State}), this
+ * board will not include information about who the active player is, the last
+ * move taken, nor does it include any method to produce child states.
+ */
 public class BoardState {
 	/**
 	 * An occupancy board; i.e., a bitboard that has a flag wherever there is
@@ -159,21 +164,24 @@ public class BoardState {
 		return true;
 	}
 
+	/**
+	 * Creates the initial board state.
+	 */
 	public static BoardState initial() {
 
 		byte[] queens = new byte[8];
 
 		// White queens
-		queens[0] = 60;
-		queens[1] = 93;
-		queens[2] = 96;
-		queens[3] = 69;
+		queens[0] = 30;
+		queens[1] = 03;
+		queens[2] = 06;
+		queens[3] = 39;
 
 		// Black queens
-		queens[4] = 30;
-		queens[5] = 03;
-		queens[6] = 06;
-		queens[7] = 39;
+		queens[4] = 60;
+		queens[5] = 93;
+		queens[6] = 96;
+		queens[7] = 69;
 
 		// Flag each queen's position.
 		long[] occupancy = BitBoard.create();

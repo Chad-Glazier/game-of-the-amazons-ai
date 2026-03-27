@@ -91,9 +91,10 @@ public class AlphaBeta
 	private boolean showOutput = false;
 
 	public AlphaBeta(
-			State initialState,
-			HeuristicMethod heuristic,
-			byte maximizingPlayer) {
+		State initialState,
+		HeuristicMethod heuristic,
+		byte maximizingPlayer
+	) {
 		this.root = initialState.copy();
 		this.player = maximizingPlayer;
 		this.heuristic = heuristic;

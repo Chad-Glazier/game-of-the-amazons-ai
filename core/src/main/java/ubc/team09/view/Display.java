@@ -13,8 +13,17 @@ import ubc.team09.state.C;
 import ubc.team09.state.Move;
 import ubc.team09.state.State;
 
+/**
+ * A class with static methods to display information and prompt users for
+ * input via the CLI.
+ */
 public class Display {
 
+	private Display() {}
+
+	/**
+	 * Prompts the user for a string input.
+	 */
 	public static String promptString(String prompt) {
 		clear();
 		printText(-13, prompt + "\n\n    > ");
@@ -34,6 +43,9 @@ public class Display {
 		return input;
 	}
 
+	/**
+	 * Prompts the user for an integer input.
+	 */
 	public static int promptInt(String prompt) {
 		clear();
 		printText(-13, prompt + "\n\n    > ");
@@ -58,6 +70,26 @@ public class Display {
 		return inputInt;
 	}
 
+	/**
+	 * Prompts the user for a string, but only allows values specified by
+	 * <code>options</code>. E.g.,
+	 * 
+	 * <pre>{@code
+	 * // The key of the map is an allowed option, and the value is a short
+	 * // description. The description should be less than ~50 characters.
+	 * Map<String, String> options = new HashMap<>();
+	 * options.put("Agedashi Tofu", "Fried tofu in tempura sauce");
+	 * options.put("Green Salad", "");
+	 * options.put("Yakitori", "2 chicken skewers");
+	 * 
+	 * String chosenItem = Display.prompt(
+	 * 	"Choose an item from the menu.",
+	 * 	options
+	 * );
+	 * 
+	 * // `chosenItem` will be one of the keys from the `options` map.
+	 * }</pre>
+	 */
 	public static String prompt(String prompt, Map<String, String> options) {
 		clear();
 		printText(-13, prompt + "\n\n    > ");
@@ -88,6 +120,10 @@ public class Display {
 		}
 	}
 
+	/**
+	 * Prompts the user for an input string, but only accepts values specified
+	 * by <code>options</code>.
+	 */
 	public static String prompt(String prompt, List<String> options) {
 		clear();
 		printText(-13, prompt + "\n\n    > ");

@@ -4,6 +4,17 @@ import ubc.team09.bitboard.BitBoard;
 import ubc.team09.state.QGraph;
 import ubc.team09.state.State;
 
+/**
+ * This evaluation is identical to {@link KMinDist}, except that this one claims
+ * territory for each color if they would need fewer <em>Queen</em> moves to
+ * reach it. This is the approach used by Martin Müller and Theodore Tegos'
+ * <em>Arrow</em> program.
+ * <hr />
+ * <strong>See Also</strong>
+ * <ul>
+ * 	<li><a href="https://www.cambridge.org/core/books/abs/more-games-of-no-chance/experiments-in-computer-amazons/F12D696AF38F435BC2C47E41DAA621E4"><em>Experiments in Computer Amazons</em></a>.</li>
+ * </ul>
+ */
 public class QMinDist implements HeuristicMethod {
 	public double evaluate(State state) {
 

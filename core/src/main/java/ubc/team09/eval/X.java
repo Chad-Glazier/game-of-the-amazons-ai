@@ -4,13 +4,14 @@ import ubc.team09.state.QGraph;
 import ubc.team09.state.State;
 
 /**
- * An implementation of the <em>X</em> term presented in a 2014 paper.
+ * An implementation of the <em>X</em> term presented in a 2014 paper by 
+ * Runxing Zhong and Ke Zhou.
  * 
  * <hr />
  * 
  * <strong>See Also</strong>
  * <ul>
- * 	<li>R. Zhong and K. Zhou, <a href="https://ieeexplore.ieee.org/abstract/document/7064199">An Optimization for Amazons Search and Evaluation,</a> 2014 </li>
+ * 	<li>R. Zhong and K. Zhou, <a href="https://ieeexplore.ieee.org/abstract/document/7064199">An Optimization for Amazons Search and Evaluation</a>, 2014 </li>
  * </ul>
  */
 public class X implements HeuristicMethod {

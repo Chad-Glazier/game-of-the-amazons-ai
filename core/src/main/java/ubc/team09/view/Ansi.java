@@ -1,6 +1,13 @@
 package ubc.team09.view;
 
+/**
+ * Contains a set of constants that represent ANSI codes, which we use to 
+ * color the CLI display. See {@link Display}.
+ */
 public class Ansi {
+
+	private Ansi() {}
+
 	public static final String RESET = "\u001B[0m";
 
 	public static final String FG_BLACK = "\u001B[30m";

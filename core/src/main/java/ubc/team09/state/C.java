@@ -5,6 +5,9 @@ package ubc.team09.state;
  * used throughout the codebase.
  */
 public class C {
+	
+	private C() {}
+
 	public static final byte WHITE = 0;
 	public static final byte BLACK = 1;
 }

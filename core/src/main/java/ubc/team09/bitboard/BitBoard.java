@@ -23,6 +23,9 @@ package ubc.team09.bitboard;
  * functions useful for creating and interacting with bitboards.
  */
 public class BitBoard {
+
+	private BitBoard() {}
+
 	/**
 	 * A mask to zero all but the least significant 36 bits. This can be used
 	 * on the higher <code>long</code> of the bitboard to zero any leftover

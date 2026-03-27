@@ -11,10 +11,17 @@ import ubc.team09.bitboard.P;
  * if a king could move from one to the other in a single move.<br />
  * <br />
  * The king-move definition of edges is the reason for the "K" in the name.
- * 
+ * <hr />
  * See {@link QGraph QGraph}
  */
 public class KGraph {
+
+	private KGraph() {}
+
+	/**
+	 * Returns a bitboard with flags for each position adjacent to 
+	 * <code>position</code>.
+	 */
 	public static long[] neighbors(byte position, long[] occupancy) {
 		long[] adjacentSquares = P.kingAttack[position];
 		long[] neighbors = {
@@ -25,6 +32,14 @@ public class KGraph {
 		return neighbors;
 	}
 
+	/**
+	 * Given a set of origins (on a bitboard) and an occupancy board, this
+	 * returns a board where each position is flagged if and only if it is
+	 * adjacent to any one of the origins.
+	 * 
+	 * @param originalPositions A bitboard with each possible origin flagged.
+	 * @param occupancy A bitboard with each occupied square flagged.
+	 */
 	public static long[] neighbors(
 		long[] originalPositions,
 		long[] occupancy

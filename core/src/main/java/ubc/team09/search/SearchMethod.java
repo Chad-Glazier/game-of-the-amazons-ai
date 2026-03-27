@@ -28,6 +28,19 @@ public interface SearchMethod {
 	public void setShowOutput(boolean show);
 
 	/**
+	 * Indicates which player we want the search to find the ideal move for.
+	 * <br /><br />
+	 * <strong>Example</strong>
+	 * <pre>{@code
+	 * SearchMethod ab = new AlphaBeta();
+	 * ab.setColor(C.WHITE); // or C.BLACK.
+	 * }</pre>
+	 * 
+	 * See {@link ubc.team09.state.C C}
+	 */
+	public void setColor(byte color);
+
+	/**
 	 * Conducts a search of the game tree and yields the best move.
 	 * <br /><br />
 	 * The move will be encoded as an <code>int</code>. See 

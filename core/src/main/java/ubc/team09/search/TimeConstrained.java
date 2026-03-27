@@ -16,6 +16,7 @@ import java.util.concurrent.TimeoutException;
  * </ol> 
  */
 public class TimeConstrained {
+
 	private long endTimeMs = 0;
 	private long timeLimitMs = 10 * 1000;
 

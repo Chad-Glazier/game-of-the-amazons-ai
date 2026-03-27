@@ -11,12 +11,19 @@ import ubc.team09.bitboard.P;
  * if a queen could move from one to the other in a single move.<br />
  * <br />
  * The queen-move definition of edges is the reason for the "Q" in the name.
- * 
- * See {@link KGraph KGraph}
+ * <hr />
+ * See {@link KGraph KGraph}.
  */
 public class QGraph {
+
+	private QGraph() {}
+
 	public static final byte UNREACHABLE = 100;
 
+	/**
+	 * Returns a bitboard with flags for each position adjacent to 
+	 * <code>position</code>.
+	 */
 	public static long[] neighbors(byte position, long[] occupancy) {
 
 		// We divide the 8 directions into two groups:
@@ -152,7 +159,7 @@ public class QGraph {
 	 * adjacent to any one of the origins.
 	 * 
 	 * @param originalPositions A bitboard with each possible origin flagged.
-	 * @param occupancy         A bitboard with each occupied square flagged.
+	 * @param occupancy A bitboard with each occupied square flagged.
 	 */
 	public static long[] neighbors(
 		long[] originalPositions, long[] occupancy

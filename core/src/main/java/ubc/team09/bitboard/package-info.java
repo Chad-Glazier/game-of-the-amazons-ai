@@ -1,4 +1,6 @@
 /**
+ * <h1>BitBoards</h1>
+ * 
  * This package is where bitboards are implemented. A bitboard in this codebase
  * is just a <code>long[2]</code> array. 
  * 

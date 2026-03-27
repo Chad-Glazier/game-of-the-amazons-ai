@@ -3,10 +3,9 @@ package ubc.team09.state;
 import ubc.team09.bitboard.BitBoard;
 
 /**
- * This class is used to handle moves on the board. Use this class to: encode
- * or decode moves as <code>int</code>s.
- * <br />
- * <br />
+ * This class is used to handle moves on the board. Use this class to encode
+ * or decode moves as <code>int</code>s and check their validity.
+ * <hr />
  * The section below describes how moves are encoded as <code>int</code>s, but
  * you don't need to understand those details to use the class.
  * <br />
@@ -14,24 +13,28 @@ import ubc.team09.bitboard.BitBoard;
  * <strong>Representation of Moves</strong>
  * <br />
  * <br />
- * A move can be represented with three values:<br />
- * - The position of the queen we want to move,<br />
- * - The queen's new position, and<br />
- * - The position of the queen's arrow.<br />
- * <br />
+ * A move can be represented with three values:
+ * <ul>
+ * 	<li>The position of the queen we want to move,</li>
+ * 	<li>The queen's new position, and</li>
+ * 	<li>The position of the queen's arrow.</li>
+ * </ul>
  * <br />
  * Since these are all position indices, they can be represented by something
  * as small as a <code>byte</code>. To ensure we have the convenience of using
  * primitive values, we will represent these three values with a single
- * <code>int</code>, where the bits are used like so:<br />
- * - The first (least significant) 8 bits are the starting position of the
- * queen.<br />
- * - The next 8 bits are the queen's destination.<br />
- * - The next 8 bits are the target for the queen's arrow.<br />
- * - The remaining (most significant) 8 bits indicate which player made the
+ * <code>int</code>, where the bits are used like so:
+ * <ul>
+ * 	<li>The first (least significant) 8 bits are the starting position of the
+ * queen.</li>
+ * 	<li>The next 8 bits are the queen's destination.</li>
+ * 	<li>The next 8 bits are the target for the queen's arrow.</li>
+ * 	<li>The remaining (most significant) 8 bits indicate which player made the
  * move. This could be deduced from other board state information (i.e.,
  * checking which queen position array the starting position belongs to),
- * but we're not using these bits for anything else.<br />
+ * but we're not using these bits for anything else so we might as well
+ * store the player color for convenience.</li>
+ * </ul>
  */
 public class Move {
 	// private static final int START_OFFSET = 0;

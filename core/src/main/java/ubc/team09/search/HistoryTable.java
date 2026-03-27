@@ -38,10 +38,15 @@ public class HistoryTable {
 	 */
 	private static final int MAX_HISTORY = 2 << 13;
 
+	/**
+	 * Creates a new, empty history table.
+	 */
 	public HistoryTable() {}
 
 	/**
 	 * Gets the history score of a move.
+	 * <br /><br />
+	 * See {@link ubc.team09.state.Move Move}.
 	 */
 	public int score(int move) {
 		return scores
@@ -97,7 +102,7 @@ public class HistoryTable {
 	}
 
 	/**
-	 * A comparator for states that orders states in <em>descending</em> order
+	 * A comparator for states that orders them in <em>descending</em> order
 	 * based on their history scores.
 	 */
 	public final Comparator<State> descending = new Comparator<State>() {

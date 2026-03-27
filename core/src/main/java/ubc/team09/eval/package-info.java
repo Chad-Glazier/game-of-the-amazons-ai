@@ -1,9 +1,11 @@
 /**
+ * <h1>Static Game State Evaluation</h1>
+ * 
  * This package is where static evaluation functions are implemented.
  * 
  * <ul>
  * 	<li>{@link HeuristicMethod} defines the general interface of a heuristic 
- * 	method.</li>
+ * 	method for evaluating a board state.</li>
  * 	<li>{@link KMinDist} is a heuristic method which partitions territory based
  * 	on the number of king moves it would take for queen to get to a given 
  * 	square.</li>

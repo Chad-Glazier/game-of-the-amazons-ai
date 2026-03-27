@@ -1,5 +1,8 @@
-/**
- * This package is where the game client is implemented.
+/** 
+ * <h1>Game Player</h1>
+ * 
+ * This package is where the game client is implemented to handle communication
+ * with the server.
  * 
  * <ul>
  * 	<li>{@link VI} defines the general interface for a game engine that is

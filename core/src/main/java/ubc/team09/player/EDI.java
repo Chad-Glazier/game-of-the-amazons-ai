@@ -18,6 +18,29 @@ public class EDI implements VI {
 	private final KMinDist kmindist = new KMinDist();
 	private final QMinDist qmindist = new QMinDist();
 
+	/**
+	 * Creates a new instance of EDI. Before consulting this instance, you must
+	 * make sure that you use {@link #setColor(byte)} and 
+	 * {@link #setTimeLimit(int)}. E.g.,
+	 * 
+	 * <pre>{@code
+	 * VI edi = new EDI();
+	 * 
+	 * // Set the color of the player we want EDI to make decisions on behalf
+	 * // of.
+	 * edi.setColor(C.WHITE);
+	 * 
+	 * // Set the time alloted per decision.
+	 * edi.setTimeLimit(10); // 10 seconds
+	 * 
+	 * // Given a board state, have EDI recommend a move.
+	 * int move = edi.consult(state);
+	 * }</pre>
+	 * 
+	 * The move result is encoded as an <code>int</code>. In order to make use
+	 * of such a move, see the {@link ubc.team09.state.Move Move} class which
+	 * has static methods for getting details about the move.
+	 */
 	public EDI() {
 		ab.setShowOutput(true);
 	}

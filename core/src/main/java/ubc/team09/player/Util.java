@@ -17,6 +17,8 @@ import ygraph.ai.smartfox.games.amazons.AmazonsGameMessage;
  */
 public class Util {
 
+	private Util() {}
+
 	/**
 	 * Generates a random Amazons boardstate.
 	 */
@@ -84,9 +86,9 @@ public class Util {
 
 	/**
 	 * Parses the occupancy board and queen positions from a
-	 * {@link ygraph.ai.smartfox.games.GameMessage#GAME_STATE_BOARD}
+	 * {@link ygraph.ai.smartfox.games.GameMessage#GAME_STATE_BOARD GAME_STATE_BOARD}
 	 * or
-	 * {@link ygraph.ai.smartfox.games.GameMessage#GAME_ACTION_START}
+	 * {@link ygraph.ai.smartfox.games.GameMessage#GAME_ACTION_START GAME_ACTION_START}
 	 * message.
 	 * <br />
 	 * <br />
@@ -135,7 +137,7 @@ public class Util {
 
 	/**
 	 * Formats the message details of a message of the type
-	 * {@link ygraph.ai.smartfox.games.GameMessage#GAME_ACTION_MOVE}
+	 * {@link ygraph.ai.smartfox.games.GameMessage#GAME_ACTION_MOVE GAME_ACTION_MOVE}
 	 * into the standard integer representation.
 	 * <br />
 	 * <br />
@@ -145,7 +147,8 @@ public class Util {
 	 */
 	@SuppressWarnings("unchecked")
 	public static int parseMove(
-			BoardState state, Map<String, Object> details) {
+		BoardState state, Map<String, Object> details
+	) {
 		ArrayList<Integer> fromCoords = (ArrayList<Integer>) details.get(AmazonsGameMessage.QUEEN_POS_CURR);
 		ArrayList<Integer> toCoords = (ArrayList<Integer>) details.get(AmazonsGameMessage.QUEEN_POS_NEXT);
 		ArrayList<Integer> arrowCoords = (ArrayList<Integer>) details.get(AmazonsGameMessage.ARROW_POS);

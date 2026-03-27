@@ -22,6 +22,23 @@ import ygraph.ai.smartfox.games.amazons.AmazonsGameMessage;
  * This class handles communication with the game server. It holds no logic
  * for making decisions; all game decisions are made by the VI that it is
  * assigned.
+ * <br /><br />
+ * <strong>Example</strong>
+ * <pre>{@code
+ * Player player = new Player(
+ * 	"username",  // The username used for communication with the server.
+ * 	new EDI(),   // Use the EDI VI to decide moves.
+ * 	C.BLACK,     // Black plays first.
+ * 	30           // 30 seconds per move.
+ * )
+ * 
+ * // Try to connect to the server.
+ * try {
+ * 	player.connect();
+ * } catch (Exception e) {
+ * 	System.out.println("Error connecting to the server.")
+ * }
+ * }</pre>
  */
 public class Player extends GamePlayer {
 

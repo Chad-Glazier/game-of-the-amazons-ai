@@ -7,8 +7,6 @@ import ubc.team09.player.Player;
 import ubc.team09.state.C;
 import ubc.team09.view.Display;
 
-import ygraph.ai.smartfox.games.GamePlayer;
-
 /**
  * The main entrypoint for the program.
  */
@@ -38,7 +36,7 @@ public class Main {
 			starting = C.BLACK;
 		}
 
-		GamePlayer player = new Player(
+		Player player = new Player(
 			username,
 			new EDI(),
 			starting,
