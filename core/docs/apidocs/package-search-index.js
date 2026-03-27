@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html","k":"18"},{"l":"ubc.team09"},{"l":"ubc.team09.bitboard"},{"l":"ubc.team09.eval"},{"l":"ubc.team09.player"},{"l":"ubc.team09.search"},{"l":"ubc.team09.state"},{"l":"ubc.team09.view"}];updateSearchResults();
